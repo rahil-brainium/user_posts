@@ -80,13 +80,15 @@
     $("#update_desc").hide();
     $("#cancel_desc").hide();
     //var value = $("#com_"+id).data('value');
-    var value = $("#comment").data('value');
     var description = $('#Description').val();
     var title = $('#Title').val();
     $("#edit_title").click(function() 
     {
       $("#Title").attr("readonly", false);
-      $("#Title").focus();
+      var SearchInput =$("#Title");
+      var strLength = SearchInput.val().length * 2;
+      SearchInput.focus();
+      SearchInput[0].setSelectionRange(strLength, strLength);
       $("#update_title").show();
       $("#cancel_title").show();
       $(this).hide();
@@ -94,6 +96,10 @@
 
     $("#edit_desc").click(function() 
     {
+      var SearchInput =$("#Description");
+      var strLength = SearchInput.val().length * 2;
+      SearchInput.focus();
+      SearchInput[0].setSelectionRange(strLength, strLength);
       $("#Description").attr("readonly", false);
       $("#Description").focus();
       $("#update_desc").show();
@@ -170,10 +176,15 @@
       $(".update_com_"+id).removeAttr('disabled');
       $(".cancel_com_"+id).removeAttr('disabled');
       $("#com_"+id).removeAttr('readonly');
+      var SearchInput = $("#com_"+id);
+      var strLength = SearchInput.val().length * 2;
+      SearchInput.focus();
+      SearchInput[0].setSelectionRange(strLength, strLength);
     }
     function update_com(id)
     {
       var val = $("#com_"+id).val();
+      console.log(val);
       $.ajax({
         type: 'PATCH',
         url: "/posts/"+#{@post.id}+"/comment_update",
@@ -184,6 +195,8 @@
           $(".update_com_"+id).attr('disabled',true);
           $(".cancel_com_"+id).attr('disabled',true);
           $(".edit_com_"+id).show();
+          $("#com_"+id).data("value", val)
+
         }, 
         error: function(data){ alert('error'); } 
       })
@@ -191,10 +204,11 @@
     function cancel_com(id)
     {
       var comment_id = id;
-      var val = $("#com_"+id).val();
       $(".edit_com_"+id).show();
       $(".update_com_"+id).attr('disabled',true);
+      $(".cancel_com_"+id).attr('disabled',true);
       $("#com_"+id).attr('readonly',true);
+      var value = $("#com_"+id).data('value');
       $("#com_"+id).val(value);
     }
 
