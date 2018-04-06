@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   get 'posts/:id' => 'posts#show'
 
   patch 'posts/:id' => 'posts#update'
+
+  patch 'posts/:id/comment_update' => 'posts#update_comment'
   devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

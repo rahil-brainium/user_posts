@@ -40,6 +40,19 @@ class PostsController < ApplicationController
     end
   end
 
+  def update_comment
+    @post = Post.find_by_id(params[:id])
+    comment_id = params[:comment_id].to_i
+    comment_val = params[:comment_val]
+    @post.comments.each do |c|
+      if c.id == comment_id
+        c.update_attribute(:comment,comment_val)
+      end 
+    end
+    render text: "success"
+  end
+
+
 
 	private
 	def post_params

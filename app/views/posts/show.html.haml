@@ -33,17 +33,40 @@
   %strong image:
   = image_tag @post.avatar.url(:thumb)
   %hr
-%div.panel.panel-success  
+
+
+
+
+
+
+%div.panel.panel-primary 
   %div.panel-heading
   %b Comments
 - if @comments.present?
   - @comments.each do |c|
     %div.panel-body
-      %b #{c.user.email} : #{c.comment}
+      %b #{c.user.email} : #{c.id}
+      %div.inner1
+      -if current_user.id == c.user_id
+        =text_field_tag 'comment' , "#{c.comment}" ,"data-value" => "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "com_#{c.id}"
+        %br
+        =button_tag("Edit",:class =>"edit_com_#{c.id}",:onclick => "edit_com(#{c.id})")
+        =button_tag("Update",:class => "update_com_#{c.id}",:disabled => 'disabled',:onclick => "update_com(#{c.id})")
+        =button_tag("Cancel",:class => "cancel_com_#{c.id}",:disabled => 'disabled',:onclick => "cancel_com(#{c.id})")
+      -else
+        =text_field_tag 'comment' , "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "#{c.id}"
+        %br
+        -if current_user.id == c.user_id
+          =button_tag("Edit",:class =>"edit_com_#{c.id}",:id => "#{c.id}",:onclick => "edit_com(#{c.id})")
+          =button_tag("Update",:class => "update_com_#{c.id}",:id => "#{c.id}",:disabled => 'disabled')
+          =button_tag("Cancel",:class => "cancel_com_#{c.id}",:id => "#{c.id}",:disabled => 'disabled')
       %br
 -else
   %div.panel-body No comments till now...
-          
+ 
+%hr
+
+
 = form_for (@comment), url: "/posts/create_comment", :html => {:class=>"form-inline"} do |f|
   .field
     = hidden_field_tag :post_id, @post.id
@@ -52,89 +75,135 @@
     = f.submit 'Comment',:class =>"btn btn-success"
 
 :javascript
-  $("#update_title").hide();
-  $("#cancel_title").hide();
-  $("#update_desc").hide();
-  $("#cancel_desc").hide();
-  var description = $('#Description').val();
-  var title = $('#Title').val();
-  $("#edit_title").click(function() 
-  {
-    $("#Title").attr("readonly", false);
-    $("#update_title").show();
-    $("#cancel_title").show();
-    $(this).hide();
-  });
-
-  $("#edit_desc").click(function() 
-  {
-    $("#Description").attr("readonly", false);
-    $("#update_desc").show();
-    $("#cancel_desc").show();
-    $(this).hide();
-  });
-
-  $("#cancel_desc").click(function()
-  {
-    $("#update_desc").hide();
-    $("#cancel_desc").hide();
-    $('#Description').attr('readonly', true);
-    $('#Description').val(description);
-    $("#edit_desc").show();
-  });
-
-  $("#cancel_title").click(function()
-  {
     $("#update_title").hide();
     $("#cancel_title").hide();
-    $('#Title').attr('readonly', true);
-    $('#Title').val(title);
-    $("#edit_title").show();
-  });
+    $("#update_desc").hide();
+    $("#cancel_desc").hide();
+    //var value = $("#com_"+id).data('value');
+    var value = $("#comment").data('value');
+    var description = $('#Description').val();
+    var title = $('#Title').val();
+    $("#edit_title").click(function() 
+    {
+      $("#Title").attr("readonly", false);
+      $("#Title").focus();
+      $("#update_title").show();
+      $("#cancel_title").show();
+      $(this).hide();
+    });
 
-  $("#update_title").click(function(){ 
-    var title_update = $('#Title').val();
-    data = title_update
-    if(title_update != title)
+    $("#edit_desc").click(function() 
     {
-      post_id = #{@post.id}
+      $("#Description").attr("readonly", false);
+      $("#Description").focus();
+      $("#update_desc").show();
+      $("#cancel_desc").show();
+      $(this).hide();
+    });
+
+    $("#cancel_desc").click(function()
+    {
+      $("#update_desc").hide();
+      $("#cancel_desc").hide();
+      $('#Description').attr('readonly', true);
+      $('#Description').val(description);
+      $("#edit_desc").show();
+    });
+
+    $("#cancel_title").click(function()
+    {
+      $("#update_title").hide();
+      $("#cancel_title").hide();
+      $('#Title').attr('readonly', true);
+      $('#Title').val(title);
+      $("#edit_title").show();
+    });
+
+    $("#update_title").click(function(){ 
+      var title_update = $('#Title').val();
+      data = title_update
+      if(title_update != title)
+      {
+        post_id = #{@post.id}
+        $.ajax({
+          type: 'PATCH',
+          url: "/posts/"+#{@post.id},
+          data:{'title': title_update},
+          success: function(data)
+          { 
+            $('#Title').attr('readonly', true);
+            $("#edit_title").show();
+            $("#update_title").hide();
+            $("#cancel_title").hide();
+            title = title_update;
+          }, 
+          error: function(data){ alert('error'); } 
+        })
+      }
+    });
+    $("#update_desc").click(function(){ 
+      var desc_update = $('#Description').val();
+      if(desc_update != description)
+      {
+        post_id = #{@post.id}
+        $.ajax({
+          type: 'PATCH',
+          url: "/posts/"+#{@post.id},
+          data:{'description': desc_update},
+          success: function(data)
+          { 
+            $('#Description').attr('readonly', true);
+            $("#edit_desc").show();
+            $("#update_desc").hide();
+            $("#cancel_desc").hide();
+            description = desc_update;
+          }, 
+          error: function(data){ alert('error'); } 
+        })
+      }
+    });
+
+    function edit_com(id)
+    {
+      var comment_id = id;
+      $(".edit_com_"+id).hide();
+      $(".update_com_"+id).removeAttr('disabled');
+      $(".cancel_com_"+id).removeAttr('disabled');
+      $("#com_"+id).removeAttr('readonly');
+    }
+    function update_com(id)
+    {
+      var val = $("#com_"+id).val();
       $.ajax({
         type: 'PATCH',
-        url: "/posts/"+#{@post.id},
-        data:{'title': title_update},
+        url: "/posts/"+#{@post.id}+"/comment_update",
+        data:{'comment_val': val,'comment_id':id},
         success: function(data)
         { 
-          $('#Title').attr('readonly', true);
-          $("#edit_title").show();
-          $("#update_title").hide();
-          $("#cancel_title").hide();
-          title = title_update;
+          $("#com_"+id).attr('readonly', true);
+          $(".update_com_"+id).attr('disabled',true);
+          $(".cancel_com_"+id).attr('disabled',true);
+          $(".edit_com_"+id).show();
         }, 
         error: function(data){ alert('error'); } 
       })
     }
-  });
-  $("#update_desc").click(function(){ 
-    var desc_update = $('#Description').val();
-    if(desc_update != description)
+    function cancel_com(id)
     {
-      post_id = #{@post.id}
-      $.ajax({
-        type: 'PATCH',
-        url: "/posts/"+#{@post.id},
-        data:{'description': desc_update},
-        success: function(data)
-        { 
-          $('#Description').attr('readonly', true);
-          $("#edit_desc").show();
-          $("#update_desc").hide();
-          $("#cancel_desc").hide();
-          description = desc_update;
-        }, 
-        error: function(data){ alert('error'); } 
-      })
+      var comment_id = id;
+      var val = $("#com_"+id).val();
+      $(".edit_com_"+id).show();
+      $(".update_com_"+id).attr('disabled',true);
+      $("#com_"+id).attr('readonly',true);
+      $("#com_"+id).val(value);
     }
-  });
+
+
+
+
+
+
+
 
   
 
