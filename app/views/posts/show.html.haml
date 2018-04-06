@@ -1,0 +1,39 @@
+= form_for (@post), url: "/posts/update_comment", :html => {:class=>"form-inline",multipart: true},:remote => true do |f|
+  .field
+    = f.label :Title
+    %br
+    = f.text_field :title,:required => true,:class=>"form-control",:readonly => "readonly"
+  %br
+  .field
+    = f.label :Description
+    %br
+    = f.text_area :description,:required => true ,:class=>"form-control",:readonly => "readonly"
+  %br
+  .field
+    = f.label :Picture
+    %br
+    = image_tag("#{@post.avatar}")
+  %br
+  .field
+    = f.label :"Upload a new picture"
+    = f.file_field :avatar,:disabled => "disabled"
+  %br
+  %hr
+%div.panel.panel-success  
+  %div.panel-heading
+  %b Comments
+- if @comments.present?
+  - @comments.each do |c|
+    %div.panel-body
+      =c.comment
+      %br
+      %b Posted by : #{c.user.email}
+-else
+  %div.panel-body No comments till now...
+          
+= form_for (@comment), url: "/posts/create_comment", :html => {:class=>"form-inline"} do |f|
+  .field
+    = hidden_field_tag :post_id, @post.id
+    = f.label :Comment
+    = f.text_field :comment,:class=>"form-control"
+    = f.submit 'Comment',:class =>"btn btn-success"
