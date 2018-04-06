@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-
+  skip_before_action :verify_authenticity_token
   def index
   	@posts = Post.all
   end
@@ -27,9 +27,18 @@ class PostsController < ApplicationController
     redirect_to :back
   end
 
-
-
-
+  def update
+    @post = Post.find_by_id(params[:id])
+    if @post.present?
+      if params[:title].present?
+        @post.update_attribute(:title,params[:title])
+        render text: "sucess"
+      else
+        @post.update_attribute(:description,params[:description])
+        render text: "sucess"
+      end
+    end
+  end
 
 
 	private

@@ -1,23 +1,37 @@
-= form_for (@post), url: "/posts/update_comment", :html => {:class=>"form-inline",multipart: true},:remote => true do |f|
-  .field
-    = f.label :Title
-    %br
-    = f.text_field :title,:required => true,:class=>"form-control",:readonly => "readonly"
-  %br
-  .field
-    = f.label :Description
-    %br
-    = f.text_area :description,:required => true ,:class=>"form-control",:readonly => "readonly"
-  %br
-  .field
-    = f.label :Picture
-    %br
-    = image_tag("#{@post.avatar}")
-  %br
-  .field
-    = f.label :"Upload a new picture"
-    = f.file_field :avatar,:disabled => "disabled"
-  %br
+:css
+  .main{
+    position: relative;
+  }
+  .inner1
+  {
+    padding-right: 280px;
+  }
+  .inner2
+  {
+    right :0;
+    position :absolute;
+    top : 20px;
+  }
+%div.main
+  %div.inner1
+    %strong Title:
+    =text_field_tag 'Title' , "#{@post.title}" ,readonly: 'readonly',:class=>"form-control"
+  %div.inner2
+    =button_tag("Edit Title",:class =>"btn btn-primary",:id => "edit_title")
+    =button_tag("Update Title",:class =>"btn btn-success",:id => "update_title")
+    =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_title")
+%br
+%div.main
+  %div.inner1
+    %strong Description:
+    =text_area_tag 'Description' , "#{@post.description}",readonly: 'readonly',:class=>"form-control"
+  %div.inner2
+    =button_tag("Edit Description",:class =>"btn btn-primary",:id => "edit_desc")
+    =button_tag("Update Description",:class =>"btn btn-success",:id => "update_desc")
+    =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_desc")
+%br
+  %strong image:
+  = image_tag @post.avatar.url(:thumb)
   %hr
 %div.panel.panel-success  
   %div.panel-heading
@@ -25,9 +39,8 @@
 - if @comments.present?
   - @comments.each do |c|
     %div.panel-body
-      =c.comment
+      %b #{c.user.email} : #{c.comment}
       %br
-      %b Posted by : #{c.user.email}
 -else
   %div.panel-body No comments till now...
           
@@ -37,3 +50,93 @@
     = f.label :Comment
     = f.text_field :comment,:class=>"form-control"
     = f.submit 'Comment',:class =>"btn btn-success"
+
+:javascript
+  $("#update_title").hide();
+  $("#cancel_title").hide();
+  $("#update_desc").hide();
+  $("#cancel_desc").hide();
+  var description = $('#Description').val();
+  var title = $('#Title').val();
+  $("#edit_title").click(function() 
+  {
+    $("#Title").attr("readonly", false);
+    $("#update_title").show();
+    $("#cancel_title").show();
+    $(this).hide();
+  });
+
+  $("#edit_desc").click(function() 
+  {
+    $("#Description").attr("readonly", false);
+    $("#update_desc").show();
+    $("#cancel_desc").show();
+    $(this).hide();
+  });
+
+  $("#cancel_desc").click(function()
+  {
+    $("#update_desc").hide();
+    $("#cancel_desc").hide();
+    $('#Description').attr('readonly', true);
+    $('#Description').val(description);
+    $("#edit_desc").show();
+  });
+
+  $("#cancel_title").click(function()
+  {
+    $("#update_title").hide();
+    $("#cancel_title").hide();
+    $('#Title').attr('readonly', true);
+    $('#Title').val(title);
+    $("#edit_title").show();
+  });
+
+  $("#update_title").click(function(){ 
+    var title_update = $('#Title').val();
+    data = title_update
+    if(title_update != title)
+    {
+      post_id = #{@post.id}
+      $.ajax({
+        type: 'PATCH',
+        url: "/posts/"+#{@post.id},
+        data:{'title': title_update},
+        success: function(data)
+        { 
+          $('#Title').attr('readonly', true);
+          $("#edit_title").show();
+          $("#update_title").hide();
+          $("#cancel_title").hide();
+          title = title_update;
+        }, 
+        error: function(data){ alert('error'); } 
+      })
+    }
+  });
+  $("#update_desc").click(function(){ 
+    var desc_update = $('#Description').val();
+    if(desc_update != description)
+    {
+      post_id = #{@post.id}
+      $.ajax({
+        type: 'PATCH',
+        url: "/posts/"+#{@post.id},
+        data:{'description': desc_update},
+        success: function(data)
+        { 
+          $('#Description').attr('readonly', true);
+          $("#edit_desc").show();
+          $("#update_desc").hide();
+          $("#cancel_desc").hide();
+          description = desc_update;
+        }, 
+        error: function(data){ alert('error'); } 
+      })
+    }
+  });
+
+  
+
+
+
