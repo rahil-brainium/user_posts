@@ -1,7 +1,7 @@
 class PostsController < ApplicationController
   skip_before_action :verify_authenticity_token
   def index
-  	@posts = Post.all
+  	@posts = Post.all.where("is_archive =? ",false)
   end
   def new
   	@post = Post.new
@@ -50,6 +50,14 @@ class PostsController < ApplicationController
       end 
     end
     render text: "success"
+  end
+  def delete_post
+    debugger
+    @post = Post.find_by_id(params[:post_id])
+    if @post.present?
+      @post.update_attribute(:is_archive,true)
+      redirect_to root_url
+      end
   end
 
 
