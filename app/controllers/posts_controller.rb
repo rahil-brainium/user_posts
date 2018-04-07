@@ -52,7 +52,6 @@ class PostsController < ApplicationController
     render text: "success"
   end
   def delete_post
-    debugger
     @post = Post.find_by_id(params[:post_id])
     if @post.present?
       @post.update_attribute(:is_archive,true)

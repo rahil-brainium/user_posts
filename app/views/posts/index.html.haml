@@ -11,7 +11,7 @@
   %div{:id => "#{p.id}"}
     %div.panel.panel-success
       %div.panel-heading
-        %b=link_to("#{p.title.truncate(30)}","/posts/#{p.id}")
+        %b=link_to("#{p.title.truncate(30).capitalize}","/posts/#{p.id}")
       %div.panel-body.fl
         %img.img_size{:src=>p.avatar}
       %div.panel-body
@@ -29,17 +29,18 @@
 :javascript
   $(".delete_post").click(function() 
     {
-      var id = $(this).data('id');
-      //alert(id);
-      $.ajax({
-        type: 'DELETE',
-        url: "/posts/delete_post",
-        data:{'post_id': id},
-        success: function(data)
-        { 
-          
-        }, 
-        error: function(data){ alert('error'); } 
-      })
+      if(confirm("Are you sure..???"))
+      {
+        var id = $(this).data('id');
+        $.ajax({
+          type: 'DELETE',
+          url: "/posts/delete_post",
+          data:{'post_id': id},
+          success: function(data)
+          { 
+
+          }, 
+          error: function(data){ alert('error'); } 
+        })
+      }
     });
-  
