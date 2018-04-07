@@ -46,7 +46,7 @@ group :development do
 end
 
 gem 'devise'
-gem 'pg'
+gem 'pg', '~> 0.20'
 gem 'haml', '~> 5.0', '>= 5.0.4'
 gem "paperclip", "~> 6.0.0"
 gem 'acts_as_commentable'
