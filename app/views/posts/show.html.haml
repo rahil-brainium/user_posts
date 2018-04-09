@@ -48,7 +48,7 @@
 
 %div.panel.panel-primary 
   %div.panel-heading
-  %b Comments
+  %b Comments : #{@comments.count}
 - if @comments.present?
   - @comments.each do |c|
     %div.panel-body

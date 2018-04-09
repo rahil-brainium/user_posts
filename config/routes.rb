@@ -19,6 +19,8 @@ Rails.application.routes.draw do
 
   delete 'posts/:id/delete_comment/:id' => 'posts#delete_comment'
 
+  patch 'posts/like_post/:id' => 'posts#like_post'
+
   devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

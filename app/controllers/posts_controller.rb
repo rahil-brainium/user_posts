@@ -21,19 +21,17 @@ class PostsController < ApplicationController
     if @post.present?
       comments = Comment.where("commentable_id =?","#{@post.id}")
       @comments = comments.where("is_archive =? ",false)
-      p "==========="
-      p @comments
-      p "======================="  
     end
   end 
   def create_comment
+    debugger
     post_id = params[:post_id]
     post_text = params[:comment][:comment]
     image = params[:comment][:avatar]
     @post = Post.find_by_id(params[:post_id])
     post_comment = @post.comments.create(:comment => post_text,:commentable_id => post_id,:user_id => current_user.id,:avatar => image)
-    @picture_post = Picture.create(:name => image,:imageable_id => post_id,:imageable_type => "Post")
-    #@picture_comment = Picture.create(:name => image,:imageable_id => post_comment.id,:imageable_type => "Comment")
+    #@picture_post = Picture.create(:name => image,:imageable_id => post_id,:imageable_type => "Post")
+    @picture_comment = Picture.create(:name => image,:imageable_id => post_comment.id,:imageable_type => "Comment")
     redirect_to :back
   end
 
@@ -81,6 +79,20 @@ class PostsController < ApplicationController
       end
     end
   end
+
+  def like_post
+    post_id = params[:id]
+    @post = Post.find_by_id(params[:id])
+    p @post
+    po = @post.likes.where("user_id =?", current_user.id)
+    if po.empty?
+      @like = Like.create(:is_liked => true,:user_id => current_user.id,:post_id => post_id)
+      redirect_to :back
+    else
+      redirect_to :back
+    end
+  end
+
 
 
 

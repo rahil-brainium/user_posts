@@ -22,11 +22,23 @@
       %div.panel-body 
         %b Posted by :
         #{p.user.email}
-      %div.panel-body
-        -if current_user.id == p.user_id.to_i 
+      -if current_user.id == p.user_id.to_i 
+        %div.panel-body
           %b=link_to("Delete this post","javascript:void(0)","data-id" => "#{p.id}",:class => "delete_post")
+      %div.panel-body 
+        %b No of comments: 
+        #{p.comments.where("is_archive =? ",false).count}
+      %div.panel-body 
+        %b No of likes: 
+        #{p.likes.where("is_liked =? ",true).count}
+      %div.panel-body
+        - if p.likes.where("user_id =?", current_user.id).empty?
+          = link_to "javascript:void(0)",:class => "liked_post","data-id" => p.id,:id => "liked_post_"+"#{p.id}" do
+            %span.glyphicon.glyphicon-thumbs-up
+      
       
 =link_to("Create a new post",posts_new_path,:class=>"btn btn-success")
+
 :javascript
   $(".delete_post").click(function() 
     {
@@ -45,3 +57,18 @@
         })
       }
     });
+
+    
+  $(".liked_post").click(function() 
+  {
+    var id = $(this).data('id');
+    $.ajax({
+      type: 'PATCH',
+      url: "/posts/like_post/"+id,
+      success: function(data)
+      { 
+        $("#liked_post_"+id).attr('style','color:red');
+      }, 
+      error: function(data){ alert('error'); } 
+    })   
+  });
