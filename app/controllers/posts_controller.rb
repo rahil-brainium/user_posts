@@ -83,14 +83,11 @@ class PostsController < ApplicationController
   def like_post
     post_id = params[:id]
     @post = Post.find_by_id(params[:id])
-    p @post
     po = @post.likes.where("user_id =?", current_user.id)
     if po.empty?
       @like = Like.create(:is_liked => true,:user_id => current_user.id,:post_id => post_id)
-      redirect_to :back
-    else
-      redirect_to :back
     end
+    redirect_to :back
   end
 
 

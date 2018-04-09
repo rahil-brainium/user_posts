@@ -32,8 +32,12 @@
         %b No of likes: 
         #{p.likes.where("is_liked =? ",true).count}
       %div.panel-body
-        - if p.likes.where("user_id =?", current_user.id).empty?
+        - if p.likes.where("is_liked =?", true).empty?
           = link_to "javascript:void(0)",:class => "liked_post","data-id" => p.id,:id => "liked_post_"+"#{p.id}" do
+            %span.glyphicon.glyphicon-thumbs-up
+        - else
+          You have liked this post
+          = link_to "javascript:void(0)",:class => "liked_post","data-id" => p.id,:id => "liked_post_"+"#{p.id}",:style => "color:green" do
             %span.glyphicon.glyphicon-thumbs-up
       
       
@@ -58,7 +62,7 @@
       }
     });
 
-    
+
   $(".liked_post").click(function() 
   {
     var id = $(this).data('id');
@@ -67,7 +71,7 @@
       url: "/posts/like_post/"+id,
       success: function(data)
       { 
-        $("#liked_post_"+id).attr('style','color:red');
+        $("#liked_post_"+id).attr('style','color:green');
       }, 
       error: function(data){ alert('error'); } 
     })   
