@@ -22,8 +22,9 @@
       %div.panel-body 
         %b Posted by :
         #{p.user.email}
-      %div.panel-body 
-        %b=link_to("Delete this post","javascript:void(0)","data-id" => "#{p.id}",:class => "delete_post")
+      %div.panel-body
+        -if current_user.id == p.user_id.to_i 
+          %b=link_to("Delete this post","javascript:void(0)","data-id" => "#{p.id}",:class => "delete_post")
       
 =link_to("Create a new post",posts_new_path,:class=>"btn btn-success")
 :javascript

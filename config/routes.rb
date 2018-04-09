@@ -17,6 +17,8 @@ Rails.application.routes.draw do
 
   delete 'posts/delete_post/:id' => 'posts#delete_post'
 
+  delete 'posts/:id/delete_comment/:id' => 'posts#delete_comment'
+
   devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

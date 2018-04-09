@@ -17,24 +17,25 @@
     display :none;
   }
 
-
 %div.main
   %div.inner1
     %strong Title:
     =text_field_tag 'Title' , "#{@post.title}" ,readonly: 'readonly',:class=>"form-control"
   %div.inner2
-    =button_tag("Edit Title",:class =>"btn btn-primary",:id => "edit_title")
-    =button_tag("Update Title",:class =>"btn btn-success",:id => "update_title")
-    =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_title")
+    -if "#{current_user.id}" == @post.user_id
+      =button_tag("Edit Title",:class =>"btn btn-primary",:id => "edit_title")
+      =button_tag("Update Title",:class =>"btn btn-success",:id => "update_title")
+      =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_title")
 %br
 %div.main
   %div.inner1
     %strong Description:
     =text_area_tag 'Description' , "#{@post.description}",readonly: 'readonly',:class=>"form-control"
   %div.inner2
-    =button_tag("Edit Description",:class =>"btn btn-primary",:id => "edit_desc")
-    =button_tag("Update Description",:class =>"btn btn-success",:id => "update_desc")
-    =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_desc")
+    -if "#{current_user.id}" == @post.user_id
+      =button_tag("Edit Description",:class =>"btn btn-primary",:id => "edit_desc")
+      =button_tag("Update Description",:class =>"btn btn-success",:id => "update_desc")
+      =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_desc")
 %br
   %strong image:
   = image_tag @post.avatar.url(:thumb)
@@ -51,30 +52,37 @@
 - if @comments.present?
   - @comments.each do |c|
     %div.panel-body
-      %b #{c.user.email} : #{c.id}
+      %b #{c.user.email} : 
       %div.inner1
+
       -if current_user.id == c.user_id
+
+
         =text_field_tag 'comment' , "#{c.comment}" ,"data-value" => "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "com_#{c.id}"
         %br
-        %img.img_size{:src=>c.avatar}
-        %br
+        -if c.avatar.present?
+          %img.img_size{:src=>c.avatar}
+          %br
         %br
         =button_tag("Edit",:class =>"edit_com_#{c.id}",:onclick => "edit_com(#{c.id})")
         =button_tag("Update",:class => "update_com_#{c.id}",:disabled => 'disabled',:onclick => "update_com(#{c.id})")
         =button_tag("Cancel",:class => "cancel_com_#{c.id}",:disabled => 'disabled',:onclick => "cancel_com(#{c.id})")
+        =button_tag("Delete",:class => "delete_com_#{c.id}",:id => "#{c.id}",:onclick => "delete_com(#{c.id})")
+
+
 
       -else
         =text_field_tag 'comment' , "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "#{c.id}"
         %br
-        -if current_user.id == c.user_id
-          =button_tag("Edit",:class =>"edit_com_#{c.id}",:id => "#{c.id}",:onclick => "edit_com(#{c.id})")
-          =button_tag("Update",:class => "update_com_#{c.id}",:id => "#{c.id}",:disabled => 'disabled')
-          =button_tag("Cancel",:class => "cancel_com_#{c.id}",:id => "#{c.id}",:disabled => 'disabled')
-          
+        - if current_user.id == @post.user_id.to_i
+          =button_tag("Delete",:class => "delete_com_#{c.id}",:id => "#{c.id}",:onclick => "delete_com(#{c.id})")
+        %br
+        -if c.avatar.present?
+          %img.img_size{:src=>c.avatar}
+          %br
       %br
 -else
   %div.panel-body No comments till now...
- 
 %hr
 
 
@@ -92,10 +100,6 @@
           .div.image_name
           %a.glyphicon.glyphicon-paperclip#upload
     = f.submit 'Comment',:class =>"btn btn-success"
-
-
-
-
 
 
 :javascript
@@ -239,6 +243,22 @@
       $("#com_"+id).attr('readonly',true);
       var value = $("#com_"+id).data('value');
       $("#com_"+id).val(value);
+    }
+
+    function delete_com(id)
+    {
+      var comment_id = id;
+      //alert(id);
+      $.ajax({
+        type: 'DELETE',
+        url: "/posts/"+#{@post.id}+"/delete_comment/"+id,
+        data:{'post_id': #{@post.id}},
+        success: function(data)
+        { 
+          
+        }, 
+        error: function(data){ alert('error'); } 
+      })
     }
 
 

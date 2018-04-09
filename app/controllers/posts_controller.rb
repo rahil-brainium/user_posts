@@ -8,15 +8,22 @@ class PostsController < ApplicationController
   end
   def create
   	@post = Post.create(post_params)
+    image = params[:post][:avatar]
+    post_id = @post.id
+    @picture_post = Picture.create(:name => image,:imageable_id => post_id,:imageable_type => "Post")
   	@post.user_id = current_user.id
   	@post.save
   	redirect_to root_url
   end
-  def show
+  def show 
   	@post = Post.find_by_id(params[:id])
     @comment = Comment.new
     if @post.present?
-      @comments = Comment.where("commentable_id =?","#{@post.id}") 
+      comments = Comment.where("commentable_id =?","#{@post.id}")
+      @comments = comments.where("is_archive =? ",false)
+      p "==========="
+      p @comments
+      p "======================="  
     end
   end 
   def create_comment
@@ -25,6 +32,8 @@ class PostsController < ApplicationController
     image = params[:comment][:avatar]
     @post = Post.find_by_id(params[:post_id])
     post_comment = @post.comments.create(:comment => post_text,:commentable_id => post_id,:user_id => current_user.id,:avatar => image)
+    @picture_post = Picture.create(:name => image,:imageable_id => post_id,:imageable_type => "Post")
+    #@picture_comment = Picture.create(:name => image,:imageable_id => post_comment.id,:imageable_type => "Comment")
     redirect_to :back
   end
 
@@ -58,6 +67,19 @@ class PostsController < ApplicationController
       @post.update_attribute(:is_archive,true)
       redirect_to root_url
       end
+  end
+
+  def delete_comment
+    comment_id = params[:id].to_i
+    @post = Post.find_by_id(params[:post_id])
+    if @post.present?
+      @post.comments.each do |c|
+        if c.id == comment_id
+          c.update_attribute(:is_archive,true)
+          redirect_to :back
+        end 
+      end
+    end
   end
 
 
