@@ -12,6 +12,12 @@
     position :absolute;
     top : 20px;
   }
+  #display_upload
+  {
+    display :none;
+  }
+
+
 %div.main
   %div.inner1
     %strong Title:
@@ -50,9 +56,13 @@
       -if current_user.id == c.user_id
         =text_field_tag 'comment' , "#{c.comment}" ,"data-value" => "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "com_#{c.id}"
         %br
+        %img.img_size{:src=>c.avatar}
+        %br
+        %br
         =button_tag("Edit",:class =>"edit_com_#{c.id}",:onclick => "edit_com(#{c.id})")
         =button_tag("Update",:class => "update_com_#{c.id}",:disabled => 'disabled',:onclick => "update_com(#{c.id})")
         =button_tag("Cancel",:class => "cancel_com_#{c.id}",:disabled => 'disabled',:onclick => "cancel_com(#{c.id})")
+
       -else
         =text_field_tag 'comment' , "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "#{c.id}"
         %br
@@ -60,6 +70,7 @@
           =button_tag("Edit",:class =>"edit_com_#{c.id}",:id => "#{c.id}",:onclick => "edit_com(#{c.id})")
           =button_tag("Update",:class => "update_com_#{c.id}",:id => "#{c.id}",:disabled => 'disabled')
           =button_tag("Cancel",:class => "cancel_com_#{c.id}",:id => "#{c.id}",:disabled => 'disabled')
+          
       %br
 -else
   %div.panel-body No comments till now...
@@ -67,21 +78,39 @@
 %hr
 
 
+
+
 = form_for (@comment), url: "/posts/create_comment", :html => {:class=>"form-inline"} do |f|
   .field
     = hidden_field_tag :post_id, @post.id
     = f.label :Comment
     = f.text_field :comment,:class=>"form-control"
+    = f.file_field :avatar, :id => "display_upload",:class => "uploadfile"
+    .input-group.img
+      .input-group-addon 
+        .div.wrapper
+          .div.image_name
+          %a.glyphicon.glyphicon-paperclip#upload
     = f.submit 'Comment',:class =>"btn btn-success"
+
+
+
+
+
 
 :javascript
     $("#update_title").hide();
     $("#cancel_title").hide();
     $("#update_desc").hide();
     $("#cancel_desc").hide();
-    //var value = $("#com_"+id).data('value');
     var description = $('#Description').val();
     var title = $('#Title').val();
+    $("#upload").click(function(){
+      var x = $(".uploadfile").trigger("click");
+      var image = $(".uploadfile").val();
+      $(".img").hide();
+      $(".uploadfile").show();     
+    });
     $("#edit_title").click(function() 
     {
       $("#Title").attr("readonly", false);

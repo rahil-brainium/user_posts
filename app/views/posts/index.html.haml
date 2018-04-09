@@ -34,7 +34,7 @@
         var id = $(this).data('id');
         $.ajax({
           type: 'DELETE',
-          url: "/posts/delete_post",
+          url: "/posts/delete_post/"+id,
           data:{'post_id': id},
           success: function(data)
           { 

@@ -3,13 +3,10 @@ development:
   encoding: unicode
   database: my_development
   pool: 5
-  username: rahil
-  password: root
+
 
 test:
   adapter: postgresql
   encoding: unicode
   database: my_test
   pool: 5
-  username: rahil
-  password: root

@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   patch 'posts/:id/comment_update' => 'posts#update_comment'
 
-  delete 'posts/delete_post' => 'posts#delete_post'
+  delete 'posts/delete_post/:id' => 'posts#delete_post'
 
   devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
