@@ -81,13 +81,19 @@ class PostsController < ApplicationController
   end
 
   def like_post
-    post_id = params[:id]
     @post = Post.find_by_id(params[:id])
-    po = @post.likes.where("user_id =?", current_user.id)
-    if po.empty?
-      @like = Like.create(:is_liked => true,:user_id => current_user.id,:post_id => post_id)
+    if_like = params[:like_boolean].to_s
+    if if_like.eql? "false"
+      po = @post.likes.where("user_id =?", current_user.id)
+      if po.empty?
+        @like = Like.create(:is_liked => true,:user_id => current_user.id,:post_id => @post.id)
+      end
+      redirect_to :back
+    else
+      po = @post.likes.where("user_id =?", current_user.id)
+      po.first.destroy
+      redirect_to :back
     end
-    redirect_to :back
   end
 
 

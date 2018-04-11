@@ -31,19 +31,24 @@
       %div.panel-body 
         %b No of likes: 
         #{p.likes.where("is_liked =? ",true).count}
-      %div.panel-body
-        - if p.likes.where("is_liked =?", true).empty?
-          = link_to "javascript:void(0)",:class => "liked_post","data-id" => p.id,:id => "liked_post_"+"#{p.id}" do
-            %span.glyphicon.glyphicon-thumbs-up
-        - else
-          You have liked this post
-          = link_to "javascript:void(0)",:class => "liked_post","data-id" => p.id,:id => "liked_post_"+"#{p.id}",:style => "color:green" do
-            %span.glyphicon.glyphicon-thumbs-up
-      
+
+
+      - if p.likes.where("is_liked =? and user_id =?",true,current_user.id).present?
+
+        %div.panel-body
+          %img{:src => "/assets/unlike",:height =>"30px",:width => "30px",:id => "like_post",:class => "like_post_icon"+"#{p.id}",:onclick => "like_post(#{p.id})"}
+      -else
+
+        %div.panel-body
+          %img{:src => "/assets/like",:height =>"30px",:width => "30px",:id => "like_post",:class => "unlike_post_icon"+"#{p.id}",:onclick => "like_post(#{p.id})"}
+    
+
+
       
 =link_to("Create a new post",posts_new_path,:class=>"btn btn-success")
 
 :javascript
+
   $(".delete_post").click(function() 
     {
       if(confirm("Are you sure..???"))
@@ -63,16 +68,23 @@
     });
 
 
-  $(".liked_post").click(function() 
-  {
-    var id = $(this).data('id');
-    $.ajax({
-      type: 'PATCH',
-      url: "/posts/like_post/"+id,
-      success: function(data)
-      { 
-        $("#liked_post_"+id).attr('style','color:green');
-      }, 
-      error: function(data){ alert('error'); } 
-    })   
-  });
+    function like_post(id) 
+    {
+      var post_id = id;
+      var x = $( "img" ).hasClass( "like_post_icon"+id );
+
+      //alert(x);
+      $.ajax({
+        type: 'PATCH',
+        url: "/posts/like_post/"+id,
+        data:{'like_boolean': x},
+        success: function(data)
+        { 
+          //alert(data);
+          //$(".like_post_icon"+id).attr('src','/assets/unlike');
+          //$(".like_post_icon"+id).removeClass('".like_post_icon"+id').addClass('".liked_post_icon"+id');
+        }, 
+        error: function(data){ alert('error'); } 
+      })  
+      //if x == false
+    }
