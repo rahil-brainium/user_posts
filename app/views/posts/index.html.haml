@@ -6,7 +6,11 @@
   .fl {
     float:left;
   }
+- if flash[:notice]
 
+  %b= flash[:notice]
+%br
+%br
 - @posts.each do |p|
   %div{:id => "#{p.id}"}
     %div.panel.panel-success
@@ -72,19 +76,15 @@
     {
       var post_id = id;
       var x = $( "img" ).hasClass( "like_post_icon"+id );
-
-      //alert(x);
       $.ajax({
         type: 'PATCH',
         url: "/posts/like_post/"+id,
         data:{'like_boolean': x},
         success: function(data)
         { 
-          //alert(data);
-          //$(".like_post_icon"+id).attr('src','/assets/unlike');
-          //$(".like_post_icon"+id).removeClass('".like_post_icon"+id').addClass('".liked_post_icon"+id');
+          
         }, 
         error: function(data){ alert('error'); } 
       })  
-      //if x == false
+     
     }

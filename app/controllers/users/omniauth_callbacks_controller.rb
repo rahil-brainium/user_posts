@@ -1,14 +1,21 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
-  def google_oauth2
-    @user = User.from_omniauth(request.env['omniauth.auth'])
-    if @user.persisted?
 
-      flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: 'Google'
-      sign_in_and_redirect @user, event: :authentication
+  def google_oauth2
+    email = request.env['omniauth.auth']['info']['email']
+    @user = User.all.where("email =?",email).first
+    if @user.present?
+      if @user.sign_in_type.eql? "google"
+        sign_in_and_redirect @user, event: :authentication
+      else
+        flash[:notice] = "You have already have an account!!!"
+        redirect_to new_user_session_path
+      end
     else
-      session['devise.google_data'] = request.env['omniauth.auth'].except(:extra)
-      redirect_to new_user_registration_url, alert: @user.errors.full_messages.join("\n")
+      @user = User.create(:email => email,:password => "test123",:sign_in_type => "google")
+      sign_in_and_redirect @user, event: :authentication
+      flash[:notice] = "Your password is test123"
     end
   end
 end
+
