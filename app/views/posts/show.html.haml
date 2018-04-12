@@ -47,8 +47,14 @@
 
 
 %div.panel.panel-primary 
-  %div.panel-heading
-  %b Comments : #{@comments.count}
+  %div.panel-heading 
+    %b Comments
+  %br
+  -if "#{@comments.count}".to_i < 2
+    %b Total comment : #{@comments.count}
+  - else
+    %b Total comments : #{@comments.count}
+    %br
 - if @comments.present?
   - @comments.each do |c|
     %div.panel-body
