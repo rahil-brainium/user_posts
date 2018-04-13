@@ -286,5 +286,6 @@ Devise.setup do |config|
   #OmniAuth.config.full_host = 'http://localhost:3000'
 
   config.omniauth :google_oauth2, '885456517548-kc51ihsd53r57b31nif10nm7op68keuk.apps.googleusercontent.com', 'NVsIzqPZ_1VMHzVA-lckq-L0', {}
+  config.omniauth :facebook, '195910564469517', 'f1ba45c2f3520a4958df7d93db46a0dc',callback_url: "https://localhost:3000/users/auth/facebook/callback"
 
 end
