@@ -51,5 +51,5 @@ gem 'haml', '~> 5.0', '>= 5.0.4'
 gem "paperclip", "~> 6.0.0"
 gem 'acts_as_commentable'
 gem 'omniauth-google-oauth2'
-
+gem 'omniauth-facebook', '1.4.0'
 
