@@ -9,7 +9,6 @@ class User < ActiveRecord::Base
 
 
   def self.from_omniauth(access_token)
-    debugger
     data = access_token.info
     user = User.where(email: data['email']).first
     # unless user
