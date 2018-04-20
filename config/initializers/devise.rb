@@ -282,9 +282,11 @@ Devise.setup do |config|
   # config.omniauth_path_prefix = '/my_engine/users/auth'
 
 
-
+  
   #OmniAuth.config.full_host = 'http://localhost:3000'
 
   config.omniauth :google_oauth2, '885456517548-kc51ihsd53r57b31nif10nm7op68keuk.apps.googleusercontent.com', 'NVsIzqPZ_1VMHzVA-lckq-L0', {}
-  config.omniauth :facebook, '195910564469517', 'f1ba45c2f3520a4958df7d93db46a0dc',callback_url: "https://evening-lake-36453.herokuapp.com/users/auth/facebook/callback"
+  #config.omniauth :facebook, '224347234979862', '85989e207b1288b083a62a5ba6b4db3a',callback_url: "https://localhost:3000/users/auth/facebook/callback"
+  config.omniauth :twitter, ' lcrPKkRvrFgssl6HNEIqvulFw', 'nhRdRk9zKuktfv4dF6k9IzYOhej8JBdRPrqEr64W8pfI1tkCz1',callback_url: "https://localhost:3000/users/auth/twitter/callback"
+
 end
