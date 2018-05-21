@@ -6,50 +6,100 @@
   .fl {
     float:left;
   }
+  .create_btn
+  {
+    padding-left: 30px;
+  }
+  .card{
+  margin-left:30px;
+  margin-right:30px;
+  }
+  .delete_post
+  {
+    float:right;
+    text-decoration: none;
+    cursor:pointer;
+    color:#000;
+  }
+  .delete_post:hover{
+    text-decoration: none;
+    color:#000;
+  }
+  .title
+  {
+    color:#000;
+  }
+  .title:hover{
+    text-decoration: none;
+    color:#000;
+  }
+  .like:hover{
+    animation: shake 0.5s;
+    animation-iteration-count: 2s;
+  }
+  @keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+  }
+
+
 - if flash[:notice]
 
   %b= flash[:notice]
 %br
 %br
+.create_btn
+  - if @posts.count<1
+    %h2 No posts yet...
+  =link_to("WRITE A POST",posts_new_path,:class=>"btn btn-success")
+%br
 - @posts.each do |p|
   %div{:id => "#{p.id}"}
-    %div.panel.panel-success
-      %div.panel-heading
-        %b=link_to("#{p.title.truncate(30).capitalize}","/posts/#{p.id}")
-      %div.panel-body.fl
-        %img.img_size{:src=>p.avatar}
-      %div.panel-body
-        %b=p.description
-      %div.panel-body.own_time_format 
-        %b Posted 
-        #{time_ago_in_words(p.created_at)} ago
-      %div.panel-body 
-        %b Posted by :
-        #{p.user.email}
-      -if current_user.id == p.user_id.to_i 
+    %div.card
+      %div.panel.panel-info
+        %div.panel-heading
+          %b
+            %a{:href=>"/posts/3",:class=>"title"}#{p.title.truncate(30).capitalize}
+          -if current_user.id == p.user_id.to_i 
+            %a.delete_post{'data-id'=>"#{p.id}"} X
+        - if p.avatar.present?
+          %div.panel-body.fl
+            %img.img_size{:src=>p.avatar}
         %div.panel-body
-          %b=link_to("Delete this post","javascript:void(0)","data-id" => "#{p.id}",:class => "delete_post")
-      %div.panel-body 
-        %b No of comments: 
-        #{p.comments.where("is_archive =? ",false).count}
-      %div.panel-body 
-        %b No of likes: 
-        #{p.likes.where("is_liked =? ",true).count}
-
-
-      - if p.likes.where("is_liked =? and user_id =?",true,current_user.id).present?
-
+          %b=p.description
         %div.panel-body
-          %img{:src => "/assets/unlike",:height =>"30px",:width => "30px",:id => "like_post",:class => "like_post_icon"+"#{p.id}",:onclick => "like_post(#{p.id})"}
-      -else
-
-        %div.panel-body
-          %img{:src => "/assets/like",:height =>"30px",:width => "30px",:id => "like_post",:class => "unlike_post_icon"+"#{p.id}",:onclick => "like_post(#{p.id})"}
+          %b Posted 
+          #{time_ago_in_words(p.created_at)} ago
+        %div.panel-body 
+          %b Posted by :
+          #{p.user.email}
+        %div.panel-body 
+          %b No of comments: 
+          #{p.comments.where("is_archive =? ",false).count}
+        %div.panel-body 
+          %b Likes: 
+          %span.badge
+          #{p.likes.where("is_liked =? ",true).count}
+        - if p.likes.where("is_liked =? and user_id =?",true,current_user.id).present?
+          %div.panel-body
+            %img{:src => "/assets/unlike",:height =>"30px",:width => "30px",:id => "like_post",:class => "like_post_icon"+"#{p.id} like",:onclick => "like_post(#{p.id})" ,:style=>"cursor:pointer;"}
+        -else
+          %div.panel-body
+            %img{:src => "/assets/like",:height =>"30px",:width => "30px",:id => "like_post",:class => "unlike_post_icon"+"#{p.id} like",:onclick => "like_post(#{p.id})",:style=>"cursor:pointer;"}
     
 
 
       
-=link_to("Create a new post",posts_new_path,:class=>"btn btn-success")
+
 
 :javascript
 

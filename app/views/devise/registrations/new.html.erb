@@ -5,8 +5,9 @@
 <style type="text/css">
   .card{
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
+    background:#aaaae733;
     width: 40%;
+    height: 400px;
     margin-left: 400px;
     margin-top:  100px;
   }
@@ -18,24 +19,21 @@
 }
 </style>
 <div class="card">
-  <center><h3 style="box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2);padding-bottom: 4px;"><strong>Sign Up</strong></h3></center>
+  <br>
+  <center><h2><strong>Sign Up</strong></h2></center>
   <div class="card-body">
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
         <%= devise_error_messages! %>
         <div class="field">
-          <%= f.label :email %><br />
-          <%= f.email_field :email, autofocus: true, autocomplete: "email",:class=>"form-control" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email",:class=>"form-control",:placeholder=>"Email" %>
         </div>
+        <br>
         <div class="field">
-          <%= f.label :password %>
-          <% if @minimum_password_length %>
-          <em>(<%= @minimum_password_length %> characters minimum)</em>
-          <% end %><br />
-          <%= f.password_field :password, autocomplete: "off",:class=>"form-control" %>
+          <%= f.password_field :password, autocomplete: "off",:class=>"form-control" ,:placeholder=>"Password(Minimum 6 characters)"%>
         </div>
+        <br>
         <div class="field">
-          <%= f.label :password_confirmation %><br />
-          <%= f.password_field :password_confirmation, autocomplete: "off",:class=>"form-control" %>
+          <%= f.password_field :password_confirmation, autocomplete: "off",:class=>"form-control",:placeholder=>"Confirm Password" %>
         </div>
         <br>
         <div class="actions">
@@ -43,7 +41,8 @@
         </div>
       <% end %>
       <br>
-      <%= render "devise/shared/links" %>
+      <%= link_to "Log In", new_user_session_path %><br>
+      <a href="/users/auth/google_oauth2">Sign in with Google</a><br>
     </div>
   </center>
 </div>
