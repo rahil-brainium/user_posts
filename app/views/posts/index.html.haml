@@ -82,18 +82,18 @@
             -else
               %div.panel-body
                 %img{:src => "/assets/like",:height =>"30px",:width => "30px",:id => "like_post",:class => "unlike_post_icon"+"#{p.id} like",:onclick => "like_post(#{p.id})",:style=>"cursor:pointer;"}
-          .col-md-3  
-            %div.panel-body
-              %b Posted 
-              #{time_ago_in_words(p.created_at)} ago
+          .col-md-3 
+            %div.panel-body 
+              %b No of comments: 
+              #{p.comments.where("is_archive =? ",false).count}     
           .col-md-3
             %div.panel-body 
               %b Posted by :
               #{p.user.email}
-          .col-md-4 
-            %div.panel-body 
-              %b No of comments: 
-              #{p.comments.where("is_archive =? ",false).count}     
+          .col-md-4  
+            %div.panel-body
+              %b Posted 
+              #{time_ago_in_words(p.created_at)} ago
 
 
 :javascript
