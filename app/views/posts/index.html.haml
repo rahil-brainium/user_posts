@@ -34,7 +34,7 @@
     color:#000;
   }
   .like:hover{
-    animation: shake 0.5s;
+    animation: shake 0.3s;
     animation-iteration-count: 2s;
   }
   @keyframes shake {
@@ -58,8 +58,6 @@
 %br
 %br
 .create_btn
-  - if @posts.count<1
-    %h2 No posts yet...
   =link_to("WRITE A POST",posts_new_path,:class=>"btn btn-success")
 %br
 - @posts.each do |p|
@@ -75,38 +73,42 @@
           %div.panel-body.fl
             %img.img_size{:src=>p.avatar}
         %div.panel-body
-          %b=p.description
-        %div.panel-body
-          %b Posted 
-          #{time_ago_in_words(p.created_at)} ago
-        %div.panel-body 
-          %b Posted by :
-          #{p.user.email}
-        %div.panel-body 
-          %b No of comments: 
-          #{p.comments.where("is_archive =? ",false).count}
-        %div.panel-body 
-          %b Likes: 
-          %span.badge
-          #{p.likes.where("is_liked =? ",true).count}
-        - if p.likes.where("is_liked =? and user_id =?",true,current_user.id).present?
-          %div.panel-body
-            %img{:src => "/assets/unlike",:height =>"30px",:width => "30px",:id => "like_post",:class => "like_post_icon"+"#{p.id} like",:onclick => "like_post(#{p.id})" ,:style=>"cursor:pointer;"}
-        -else
-          %div.panel-body
-            %img{:src => "/assets/like",:height =>"30px",:width => "30px",:id => "like_post",:class => "unlike_post_icon"+"#{p.id} like",:onclick => "like_post(#{p.id})",:style=>"cursor:pointer;"}
-    
-
-
-      
+          %b=p.description.truncate(100)
+        .row
+          .col-md-1
+            - if p.likes.where("is_liked =? and user_id =?",true,current_user.id).present?
+              %div.panel-body
+                %img{:src => "/assets/unlike",:height =>"30px",:width => "30px",:id => "like_post",:class => "like_post_icon"+"#{p.id} like",:onclick => "like_post(#{p.id})" ,:style=>"cursor:pointer;"}
+            -else
+              %div.panel-body
+                %img{:src => "/assets/like",:height =>"30px",:width => "30px",:id => "like_post",:class => "unlike_post_icon"+"#{p.id} like",:onclick => "like_post(#{p.id})",:style=>"cursor:pointer;"}
+          .col-md-3  
+            %div.panel-body
+              %b Posted 
+              #{time_ago_in_words(p.created_at)} ago
+          .col-md-3
+            %div.panel-body 
+              %b Posted by :
+              #{p.user.email}
+          .col-md-4 
+            %div.panel-body 
+              %b No of comments: 
+              #{p.comments.where("is_archive =? ",false).count}     
 
 
 :javascript
 
   $(".delete_post").click(function() 
     {
-      if(confirm("Are you sure..???"))
-      {
+      swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to revert back!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {      
         var id = $(this).data('id');
         $.ajax({
           type: 'DELETE',
@@ -114,11 +116,19 @@
           data:{'post_id': id},
           success: function(data)
           { 
-
+            $("#"+data).remove();
+            swal("Poof! Your post has been deleted!", {
+              icon: "success",
+            });
           }, 
           error: function(data){ alert('error'); } 
         })
-      }
+        } else 
+        {
+          swal("We did not delete your post");
+        }
+      });
+      
     });
 
 

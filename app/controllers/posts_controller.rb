@@ -61,8 +61,8 @@ class PostsController < ApplicationController
     @post = Post.find_by_id(params[:post_id])
     if @post.present?
       @post.update_attribute(:is_archive,true)
-      redirect_to root_url
       end
+    render json: @post.id
   end
 
   def delete_comment
