@@ -14,9 +14,13 @@
 .card-body{
   padding: 2px 16px;
 }
+.close:hover{
+  text-decoration: none;
+}
 </style>
 <div class="card">
-  <div style="padding-top:20px;"
+  <div  style="float: right;padding-right:10px;padding-top: 10px;cursor: pointer;color: #060000;"><a href="/" class="close">X</a></div>
+  <div style="padding-top:20px;">
   <div class="card-body">
     <%= form_for (@post),url: posts_create_path do |f| %>
       <div class="field">
