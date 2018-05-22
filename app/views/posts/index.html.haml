@@ -46,6 +46,10 @@
     animation: shake 0.3s;
     animation-iteration-count: 2s;
   }
+  .alert
+  {
+    margin-right: 32px;
+  }
   @keyframes shake {
     0% { transform: translate(1px, 1px) rotate(0deg); }
     10% { transform: translate(-1px, -2px) rotate(-1deg); }
@@ -59,14 +63,12 @@
     90% { transform: translate(1px, 2px) rotate(0deg); }
     100% { transform: translate(1px, -2px) rotate(-1deg); }
   }
-
-
-- if flash[:notice]
-
-  %b= flash[:notice]
 %br
 %br
 .create_btn
+  - if flash[:notice]
+    %div.alert.alert-info
+      %b= flash[:notice]
   =link_to("WRITE A POST",posts_new_path,:class=>"btn btn-success")
 %br
 - @posts.each do |p|
@@ -107,6 +109,7 @@
 
 :javascript
 
+  $(".alert.alert-info").fadeOut(5000);
   $(".delete_post").click(function() 
     {
       swal({

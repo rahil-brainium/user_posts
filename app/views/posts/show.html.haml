@@ -16,95 +16,89 @@
   {
     display :none;
   }
-%div.main
-  %div.inner1
-    %strong Title:
-    =text_field_tag 'Title' , "#{@post.title}" ,readonly: 'readonly',:class=>"form-control"
-  %div.inner2
-    -if "#{current_user.id}" == @post.user_id
-      =button_tag("Edit Title",:class =>"btn btn-primary",:id => "edit_title")
-      =button_tag("Update Title",:class =>"btn btn-success",:id => "update_title")
-      =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_title")
-%br
-%div.main
-  %div.inner1
-    %strong Description:
-    =text_area_tag 'Description' , "#{@post.description}",readonly: 'readonly',:class=>"form-control"
-  %div.inner2
-    -if "#{current_user.id}" == @post.user_id
-      =button_tag("Edit Description",:class =>"btn btn-primary",:id => "edit_desc")
-      =button_tag("Update Description",:class =>"btn btn-success",:id => "update_desc")
-      =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_desc")
-%br
-  %strong image:
-  = image_tag @post.avatar.url(:thumb)
-  %hr
+  .card{
+  margin-left:30px;
+  margin-right:30px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  padding: 10px;
+  height:auto;
+  }
+  .card:hover{
+    box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2);
+  }
+  .glyphicon-paperclip:hover{
+  text-decoration:none;
 
-
-
-
-
-
-%div.panel.panel-primary 
-  %div.panel-heading 
-    %b Comments
+  }
+.card
+  %div.main
+    %div.inner1
+      %strong Title:
+      =text_field_tag 'Title' , "#{@post.title}" ,readonly: 'readonly',:class=>"form-control"
+    %div.inner2
+      -if "#{current_user.id}" == @post.user_id
+        =button_tag("Edit Title",:class =>"btn btn-primary",:id => "edit_title")
+        =button_tag("Update Title",:class =>"btn btn-success",:id => "update_title")
+        =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_title")
   %br
-  -if "#{@comments.count}".to_i < 2
-    %b Total comment : #{@comments.count}
-  - else
-    %b Total comments : #{@comments.count}
-    %br
-- if @comments.present?
-  - @comments.each do |c|
-    %div.panel-body
-      %b #{c.user.email} : 
-      %div.inner1
-
-      -if current_user.id == c.user_id
-
-
-        =text_field_tag 'comment' , "#{c.comment}" ,"data-value" => "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "com_#{c.id}"
-        %br
-        -if c.avatar.present?
-          %img.img_size{:src=>c.avatar}
+  %div.main
+    %div.inner1
+      %strong Description:
+      =text_area_tag 'Description' , "#{@post.description}",readonly: 'readonly',:class=>"form-control"
+    %div.inner2
+      -if "#{current_user.id}" == @post.user_id
+        =button_tag("Edit Description",:class =>"btn btn-primary",:id => "edit_desc")
+        =button_tag("Update Description",:class =>"btn btn-success",:id => "update_desc")
+        =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_desc")
+  %br
+    = image_tag @post.avatar.url(:thumb)
+%br
+.card
+  %div.panel.panel-primary 
+    %div.panel-heading 
+      %b Comments
+  - if @comments.present?
+    - @comments.each do |c|
+      %div.panel-body
+        %b #{c.user.email} : 
+        %div.inner1
+        -if current_user.id == c.user_id
+          =text_field_tag 'comment' , "#{c.comment}" ,"data-value" => "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "com_#{c.id}"
           %br
-        %br
-        =button_tag("Edit",:class =>"edit_com_#{c.id}",:onclick => "edit_com(#{c.id})")
-        =button_tag("Update",:class => "update_com_#{c.id}",:disabled => 'disabled',:onclick => "update_com(#{c.id})")
-        =button_tag("Cancel",:class => "cancel_com_#{c.id}",:disabled => 'disabled',:onclick => "cancel_com(#{c.id})")
-        =button_tag("Delete",:class => "delete_com_#{c.id}",:id => "#{c.id}",:onclick => "delete_com(#{c.id})")
-
-
-
-      -else
-        =text_field_tag 'comment' , "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "#{c.id}"
-        %br
-        - if current_user.id == @post.user_id.to_i
+          -if c.avatar.present?
+            %img.img_size{:src=>c.avatar}
+            %br
+          %br
+          =button_tag("Edit",:class =>"edit_com_#{c.id}",:onclick => "edit_com(#{c.id})")
+          =button_tag("Update",:class => "update_com_#{c.id}",:disabled => 'disabled',:onclick => "update_com(#{c.id})")
+          =button_tag("Cancel",:class => "cancel_com_#{c.id}",:disabled => 'disabled',:onclick => "cancel_com(#{c.id})")
           =button_tag("Delete",:class => "delete_com_#{c.id}",:id => "#{c.id}",:onclick => "delete_com(#{c.id})")
-        %br
-        -if c.avatar.present?
-          %img.img_size{:src=>c.avatar}
+        -else
+          =text_field_tag 'comment' , "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "#{c.id}"
           %br
-      %br
--else
-  %div.panel-body No comments till now...
-%hr
+          - if current_user.id == @post.user_id.to_i
+            =button_tag("Delete",:class => "delete_com_#{c.id}",:id => "#{c.id}",:onclick => "delete_com(#{c.id})")
+          %br
+          -if c.avatar.present?
+            %img.img_size{:src=>c.avatar}
+            %br
+        %br
+  -else
+    %div.panel-body No comments till now...
+  %br
 
-
-
-
-= form_for (@comment), url: "/posts/create_comment", :html => {:class=>"form-inline"} do |f|
-  .field
-    = hidden_field_tag :post_id, @post.id
-    = f.label :Comment
-    = f.text_field :comment,:class=>"form-control"
-    = f.file_field :avatar, :id => "display_upload",:class => "uploadfile"
-    .input-group.img
-      .input-group-addon 
-        .div.wrapper
-          .div.image_name
-          %a.glyphicon.glyphicon-paperclip#upload
-    = f.submit 'Comment',:class =>"btn btn-success"
+  = form_for (@comment), url: "/posts/create_comment", :html => {:class=>"form-inline"} do |f|
+    .field{:style=>"margin-left:14px;"}
+      = hidden_field_tag :post_id, @post.id
+      = f.text_field :comment,:class=>"form-control"
+      = f.file_field :avatar, :id => "display_upload",:class => "uploadfile"
+      .input-group.img
+        .input-group-addon 
+          .div.wrapper
+            .div.image_name
+            %a.glyphicon.glyphicon-paperclip#upload{:style=>"cursor:pointer;"}
+      = f.submit 'Comment',:class =>"btn btn-success"
+  %br
 
 
 :javascript
