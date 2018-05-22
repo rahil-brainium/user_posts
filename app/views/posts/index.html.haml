@@ -6,6 +6,9 @@
   .fl {
     float:left;
   }
+  .fr{
+    float:right
+  }
   .create_btn
   {
     padding-left: 30px;
@@ -13,6 +16,12 @@
   .card{
   margin-left:30px;
   margin-right:30px;
+  }
+  .card:hover{
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  }
+  .panel-heading{
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   }
   .delete_post
   {
@@ -73,7 +82,7 @@
           %div.panel-body.fl
             %img.img_size{:src=>p.avatar}
         %div.panel-body
-          %b=p.description.truncate(100)
+          %b=p.description.truncate(1500)
         .row
           .col-md-1
             - if p.likes.where("is_liked =? and user_id =?",true,current_user.id).present?
@@ -84,10 +93,10 @@
                 %img{:src => "/assets/like",:height =>"30px",:width => "30px",:id => "like_post",:class => "unlike_post_icon"+"#{p.id} like",:onclick => "like_post(#{p.id})",:style=>"cursor:pointer;"}
           .col-md-3 
             %div.panel-body 
-              %b No of comments: 
+              %b Comments: 
               #{p.comments.where("is_archive =? ",false).count}     
           .col-md-3
-            %div.panel-body 
+            %div.panel-body
               %b Posted by :
               #{p.user.email}
           .col-md-4  
