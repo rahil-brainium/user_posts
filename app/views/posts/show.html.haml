@@ -63,10 +63,11 @@
         %b #{c.user.email} : 
         %div.inner1
         -if current_user.id == c.user_id
-          =text_field_tag 'comment' , "#{c.comment}" ,"data-value" => "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "com_#{c.id}"
+          - if c.comment.present?
+            =text_field_tag 'comment' , "#{c.comment}" ,"data-value" => "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "com_#{c.id}"
           %br
           -if c.avatar.present?
-            %img.img_size{:src=>c.avatar}
+            %img.img_size{:src=>c.avatar,:style=>"max-width:500px;max-height:500px;"}
             %br
           %br
           =button_tag("Edit",:class =>"edit_com_#{c.id}",:onclick => "edit_com(#{c.id})")
@@ -92,13 +93,14 @@
       = hidden_field_tag :post_id, @post.id
       = f.text_field :comment,:class=>"form-control"
       = f.file_field :avatar, :id => "display_upload",:class => "uploadfile"
-      .input-group.img
-        .input-group-addon 
-          .div.wrapper
-            .div.image_name
-            %a.glyphicon.glyphicon-paperclip#upload{:style=>"cursor:pointer;"}
+      &nbsp; 
+      %a.glyphicon.glyphicon-paperclip#upload{:style=>"cursor:pointer;"}
+      &nbsp; 
+
       = f.submit 'Comment',:class =>"btn btn-success"
   %br
+= link_to "#", class: 'btn btn-info',  title: "#{}", 'data-toggle' => 'tooltip', 'data-placement' => 'right' do
+  %span.glyphicon.glyphicon-search
 
 
 :javascript
