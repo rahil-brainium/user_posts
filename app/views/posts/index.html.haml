@@ -28,10 +28,10 @@
     float:right;
     text-decoration: none;
     cursor:pointer;
-    color:#000;
+    color:#689b58;
   }
   .delete_post:hover{
-    text-decoration: none;
+    
     color:#000;
   }
   .title
@@ -49,6 +49,7 @@
   .alert
   {
     margin-right: 32px;
+    z-index=99999999;
   }
   @keyframes shake {
     0% { transform: translate(1px, 1px) rotate(0deg); }
@@ -72,14 +73,15 @@
   =link_to("WRITE A POST",posts_new_path,:class=>"btn btn-success")
 %br
 - @posts.each do |p|
-  %div{:id => "#{p.id}"}
+  %div{:id => "#{p.id}",:style=>"overflow-x:99999999;"}
     %div.card
       %div.panel.panel-info
         %div.panel-heading
           %b
-            %a{:href=>"/posts/#{p.id}",:class=>"title"}#{p.title.truncate(30).capitalize}
+            %a.post_title{:href=>"/posts/#{p.id}",:class=>"title"}#{p.title.truncate(30).capitalize}
           -if current_user.id == p.user_id.to_i 
-            %a.delete_post{'data-id'=>"#{p.id}"} X
+            %a{'data-id'=>"#{p.id}"}
+            %span.glyphicon.glyphicon-trash.delete_post{:style=>"float:right;cursor:pointer"}
         - if p.avatar.present?
           %div.panel-body.fl
             %img.img_size{:src=>p.avatar}

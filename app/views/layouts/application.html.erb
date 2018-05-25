@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>UserPosts</title>
+  <link type="png" href="/assets/appicon.png"/>
+  <title>Let's Blog</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
@@ -12,19 +13,51 @@
 </head>
 <body  style="background:#aaaae71a;">
 	<% if user_signed_in? %>
-    <nav class="navbar navbar-inverse">
-      <div class="container-fluid">
-        <div class="navbar-header active">
-          <a class="navbar-brand" href="/">My new App</a>
-          <ul class="nav navbar-nav">
-            <li><%= link_to("Newsfeed",root_url,:class=>"glyphicon glyphicon-home")%></li>
-            <li><%= link_to('Logout', destroy_user_session_path, method: :delete) %></li>
-          </ul>
-  <% end %>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid" style="top:5px;">
+      <div class="navbar-header active" >     
+        <div class="heading_image"><img src="/assets/appicon.png" class="heading_image" style="float:left;height:35px;width:35px;margin-top:11px;cursor:pointer"><a href="/" class="navbar-brand" style="margin-top:10px;margin-left:-24px;cursor:pointer">logs</a></div>
       </div>
+      <ul class="nav navbar-nav">
+        <li>
+          <%= link_to('NewsFeed',root_url,:style=>"top:5px;") %>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            <img src="/assets/profile.png" style="height:30px;width:30px;"> 
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <%= link_to("View Profile","#") %>
+            </li>
+            <li>
+              <%= link_to("Edit Profile","#") %>
+            </li>
+            <li>
+              <%= link_to('Logout', destroy_user_session_path, method: :delete) %>
+            </li>
+          </ul>
+        </li>
+      </ul>
     </div>
   </nav>
+<% end %>
+
 <%= yield %>
 
-</body">
+</body>
+<script type="text/javascript">
+  $(".heading_image").on("click",function(){
+    window.location.href="/";
+  })
+</script>
+<style type="text/css">
+  .heading_image:hover{
+    -webkit-filter: brightness(500%); /* Safari 6.0 - 9.0 */
+    filter: brightness(500%);
+  }
+</style>
 </html>

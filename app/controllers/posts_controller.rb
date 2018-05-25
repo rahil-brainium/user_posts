@@ -15,14 +15,17 @@ class PostsController < ApplicationController
   	@post.save
   	redirect_to root_url
   end
+
   def show 
-  	@post = Post.find_by_id(params[:id])
+    @post = Post.find_by_id(params[:id])
+    #@post_comments = Post.includes(:comments).where("comments.commentable_id=?",@post.id)
     @comment = Comment.new
     if @post.present?
       comments = Comment.where("commentable_id =?","#{@post.id}")
       @comments = comments.where("is_archive =? ",false)
     end
-  end 
+  end
+
   def create_comment
     post_id = params[:post_id]
     post_text = params[:comment][:comment]
