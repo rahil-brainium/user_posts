@@ -11,25 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180522063109) do
+ActiveRecord::Schema.define(version: 20180601124014) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "comments", force: :cascade do |t|
-    t.string   "title",               limit: 50, default: ""
+    t.string   "title",            limit: 50, default: ""
     t.text     "comment"
     t.integer  "commentable_id"
     t.string   "commentable_type"
     t.integer  "user_id"
-    t.string   "role",                           default: "comments"
+    t.string   "role",                        default: "comments"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "avatar_file_name"
-    t.string   "avatar_content_type"
-    t.integer  "avatar_file_size"
-    t.datetime "avatar_updated_at"
-    t.boolean  "is_archive",                     default: false
+    t.boolean  "is_archive",                  default: false
   end
 
   add_index "comments", ["commentable_id"], name: "index_comments_on_commentable_id", using: :btree
@@ -45,23 +41,22 @@ ActiveRecord::Schema.define(version: 20180522063109) do
   end
 
   create_table "pictures", force: :cascade do |t|
-    t.string   "name"
     t.integer  "imageable_id"
     t.string   "imageable_type"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
   end
 
   create_table "posts", force: :cascade do |t|
     t.string   "title"
     t.string   "user_id"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.boolean  "is_archive",          default: false
-    t.string   "avatar_file_name"
-    t.string   "avatar_content_type"
-    t.integer  "avatar_file_size"
-    t.datetime "avatar_updated_at"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.boolean  "is_archive",  default: false
     t.text     "description"
   end
 
@@ -78,10 +73,6 @@ ActiveRecord::Schema.define(version: 20180522063109) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
-    t.string   "avatar_file_name"
-    t.string   "avatar_content_type"
-    t.integer  "avatar_file_size"
-    t.datetime "avatar_updated_at"
     t.string   "sign_in_type",           default: "normal"
   end
 

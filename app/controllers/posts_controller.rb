@@ -8,11 +8,11 @@ class PostsController < ApplicationController
   end
   def create
   	@post = Post.create(post_params)
-    image = params[:post][:avatar]
+    # image = params[:post][:avatar]
     post_id = @post.id
-    params[:post][:avatar].each do |image|
-      @picture_post = Picture.create(:name => image,:imageable_id => post_id,:imageable_type => "Post")
-    end
+    # params[:post][:avatar].each do |image|
+    #   @picture_post = Picture.create(:name => image,:imageable_id => post_id,:imageable_type => "Post")
+    # end
   	@post.user_id = current_user.id
   	@post.save
   	redirect_to root_url
@@ -30,10 +30,10 @@ class PostsController < ApplicationController
   def create_comment
     post_id = params[:post_id]
     post_text = params[:comment][:comment]
-    image = params[:comment][:avatar]
+    # image = params[:comment][:avatar]
     @post = Post.find_by_id(params[:post_id])
     post_comment = @post.comments.create(:comment => post_text,:commentable_id => post_id,:user_id => current_user.id,:avatar => image)
-    @picture_comment = Picture.create(:name => image,:imageable_id => post_comment.id,:imageable_type => "Comment")
+    # @picture_comment = Picture.create(:name => image,:imageable_id => post_comment.id,:imageable_type => "Comment")
     redirect_to :back
   end
 

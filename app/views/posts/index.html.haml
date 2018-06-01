@@ -78,9 +78,9 @@
             -if current_user.id == p.user_id.to_i 
               %a{'data-id'=>"#{p.id}"}
               %span.glyphicon.glyphicon-trash.delete_post{:style=>"float:right;cursor:pointer"}
-          - if p.avatar.present?
-            %div.panel-body.fl
-              %img.img_size{:src=>p.avatar}
+          / - if p.avatar.present?
+          /   %div.panel-body.fl
+          /     %img.img_size{:src=>p.avatar}
           %div.panel-body
             %b=p.description.truncate(1500)
           .row
@@ -113,9 +113,9 @@
             %div.panel-heading
               %b
                 %a.post_title{:href=>"javascript:void(0)",:class=>"post_title_nonuser"}#{p.title.truncate(30).capitalize}
-            - if p.avatar.present?
-              %div.panel-body.fl
-                %img.img_size{:src=>p.avatar}
+            / - if p.avatar.present?
+            /   %div.panel-body.fl
+            /     %img.img_size{:src=>p.avatar}
             %div.panel-body
               %b=p.description.truncate(1500)
             .row
