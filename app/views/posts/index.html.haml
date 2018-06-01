@@ -101,31 +101,36 @@
                 #{time_ago_in_words(p.created_at)} ago
 
 - else
-  - @posts.each do |p|
-    %div{:id => "#{p.id}",:style=>"overflow-x:99999999;"}
-      %div.card
-        %div.panel.panel-info
-          %div.panel-heading
-            %b
-              %a.post_title{:href=>"/posts/#{p.id}",:class=>"title"}#{p.title.truncate(30).capitalize}
-          - if p.avatar.present?
-            %div.panel-body.fl
-              %img.img_size{:src=>p.avatar}
-          %div.panel-body
-            %b=p.description.truncate(1500)
-          .row
-            .col-md-4 
-              %div.panel-body 
-                %b Comments: 
-                #{p.comments.where("is_archive =? ",false).count}     
-            .col-md-4
-              %div.panel-body
-                %b Posted by :
-                #{p.user.email}
-            .col-md-4  
-              %div.panel-body
-                %b Posted 
-                #{time_ago_in_words(p.created_at)} ago
+  -if @posts.present?
+    - @posts.each do |p|
+      %div{:id => "#{p.id}",:style=>"overflow-x:99999999;"}
+        %div.card
+          %div.panel.panel-info
+            %div.panel-heading
+              %b
+                %a.post_title{:href=>"/posts/#{p.id}",:class=>"title"}#{p.title.truncate(30).capitalize}
+            - if p.avatar.present?
+              %div.panel-body.fl
+                %img.img_size{:src=>p.avatar}
+            %div.panel-body
+              %b=p.description.truncate(1500)
+            .row
+              .col-md-4 
+                %div.panel-body 
+                  %b Comments: 
+                  #{p.comments.where("is_archive =? ",false).count}     
+              .col-md-4
+                %div.panel-body
+                  %b Posted by :
+                  #{p.user.email}
+              .col-md-4  
+                %div.panel-body
+                  %b Posted 
+                  #{time_ago_in_words(p.created_at)} ago
+  -else
+    %div{:style=>"padding-left:20px;"} 
+    %b 
+      No posts yet...
 
 
 :javascript
