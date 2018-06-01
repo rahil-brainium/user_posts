@@ -64,49 +64,46 @@
     90% { transform: translate(1px, 2px) rotate(0deg); }
     100% { transform: translate(1px, -2px) rotate(-1deg); }
   }
-%br
-%br
-.create_btn
-  - if flash[:notice]
-    %div.alert.alert-info
-      %b= flash[:notice]
-  =link_to("WRITE A POST",posts_new_path,:class=>"btn btn-success")
-%br
-- @posts.each do |p|
-  %div{:id => "#{p.id}",:style=>"overflow-x:99999999;"}
-    %div.card
-      %div.panel.panel-info
-        %div.panel-heading
-          %b
-            %a.post_title{:href=>"/posts/#{p.id}",:class=>"title"}#{p.title.truncate(30).capitalize}
-          -if current_user.id == p.user_id.to_i 
-            %a{'data-id'=>"#{p.id}"}
-            %span.glyphicon.glyphicon-trash.delete_post{:style=>"float:right;cursor:pointer"}
-        - if p.avatar.present?
-          %div.panel-body.fl
-            %img.img_size{:src=>p.avatar}
-        %div.panel-body
-          %b=p.description.truncate(1500)
-        .row
-          .col-md-1
-            - if p.likes.where("is_liked =? and user_id =?",true,current_user.id).present?
+- if user_signed_in?
+  %br
+  .create_btn
+    =link_to("WRITE A POST",posts_new_path,:class=>"btn btn-success")
+  %br
+  - @posts.each do |p|
+    %div{:id => "#{p.id}",:style=>"overflow-x:99999999;"}
+      %div.card
+        %div.panel.panel-info
+          %div.panel-heading
+            %b
+              %a.post_title{:href=>"/posts/#{p.id}",:class=>"title"}#{p.title.truncate(30).capitalize}
+            -if current_user.id == p.user_id.to_i 
+              %a{'data-id'=>"#{p.id}"}
+              %span.glyphicon.glyphicon-trash.delete_post{:style=>"float:right;cursor:pointer"}
+          - if p.avatar.present?
+            %div.panel-body.fl
+              %img.img_size{:src=>p.avatar}
+          %div.panel-body
+            %b=p.description.truncate(1500)
+          .row
+            .col-md-1
+              - if p.likes.where("is_liked =? and user_id =?",true,current_user.id).present?
+                %div.panel-body
+                  %img{:src => "/assets/unlike",:height =>"30px",:width => "30px",:id => "like_post",:class => "like_post_icon"+"#{p.id} like",:onclick => "like_post(#{p.id})" ,:style=>"cursor:pointer;"}
+              -else
+                %div.panel-body
+                  %img{:src => "/assets/like",:height =>"30px",:width => "30px",:id => "like_post",:class => "unlike_post_icon"+"#{p.id} like",:onclick => "like_post(#{p.id})",:style=>"cursor:pointer;"}
+            .col-md-3 
+              %div.panel-body 
+                %b Comments: 
+                #{p.comments.where("is_archive =? ",false).count}     
+            .col-md-3
               %div.panel-body
-                %img{:src => "/assets/unlike",:height =>"30px",:width => "30px",:id => "like_post",:class => "like_post_icon"+"#{p.id} like",:onclick => "like_post(#{p.id})" ,:style=>"cursor:pointer;"}
-            -else
+                %b Posted by :
+                #{p.user.email}
+            .col-md-4  
               %div.panel-body
-                %img{:src => "/assets/like",:height =>"30px",:width => "30px",:id => "like_post",:class => "unlike_post_icon"+"#{p.id} like",:onclick => "like_post(#{p.id})",:style=>"cursor:pointer;"}
-          .col-md-3 
-            %div.panel-body 
-              %b Comments: 
-              #{p.comments.where("is_archive =? ",false).count}     
-          .col-md-3
-            %div.panel-body
-              %b Posted by :
-              #{p.user.email}
-          .col-md-4  
-            %div.panel-body
-              %b Posted 
-              #{time_ago_in_words(p.created_at)} ago
+                %b Posted 
+                #{time_ago_in_words(p.created_at)} ago
 
 
 :javascript

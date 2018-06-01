@@ -41,12 +41,12 @@ class PostsController < ApplicationController
     if @post.present?
       if params[:title].present?
         @post.update_attribute(:title,params[:title])
-        render text: "sucess"
       else
         @post.update_attribute(:description,params[:description])
-        render text: "sucess"
+        #render text: "sucess"
       end
     end
+    render text: "sucess"
   end
 
   def update_comment
@@ -75,10 +75,10 @@ class PostsController < ApplicationController
       @post.comments.each do |c|
         if c.id == comment_id
           c.update_attribute(:is_archive,true)
-          redirect_to :back
         end 
       end
     end
+    redirect_to :back
   end
 
   def like_post

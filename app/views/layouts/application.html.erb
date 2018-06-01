@@ -2,7 +2,7 @@
 <html>
 <head>
   <link type="png" href="/assets/appicon.png"/>
-  <title>Let's Blog</title>
+  <title>Let's Vlog</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
@@ -31,7 +31,7 @@
           </a>
           <ul class="dropdown-menu">
             <li>
-              <%= link_to("View Profile","#") %>
+              <%= link_to("Change Password","/users/password/edit") %>
             </li>
             <li>
               <%= link_to("Edit Profile","#") %>
@@ -45,7 +45,12 @@
     </div>
   </nav>
 <% end %>
-
+<% if notice %>
+  <div class="alert alert-dismissible alert-info">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong><%= notice %></strong>
+  </div>
+<% end %>
 <%= yield %>
 
 </body>
@@ -56,7 +61,7 @@
 </script>
 <style type="text/css">
   .heading_image:hover{
-    -webkit-filter: brightness(500%); /* Safari 6.0 - 9.0 */
+    -webkit-filter: brightness(500%); 
     filter: brightness(500%);
   }
 </style>
