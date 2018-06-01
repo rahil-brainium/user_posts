@@ -6,6 +6,10 @@
   {
     padding-right: 280px;
   }
+  .inner3
+  {
+    padding-right: 280px;
+  }
   .inner2
   {
     right :0;
@@ -31,27 +35,44 @@
 
   }
 .card
+
+
+
   %div.main
-    %div.inner1
-      %strong Title:
-      =text_field_tag 'Title' , "#{@post.title}" ,readonly: 'readonly',:class=>"form-control"
-    %div.inner2
-      -if "#{current_user.id}" == @post.user_id
+    -if "#{current_user.id}" == @post.user_id
+      %div.inner1
+        %strong Title:
+        =text_field_tag 'Title' , "#{@post.title}" ,readonly: 'readonly',:class=>"form-control"
+    -else
+      %div
+        %strong Title:
+        =text_field_tag 'Title' , "#{@post.title}" ,readonly: 'readonly',:class=>"form-control"
+    -if "#{current_user.id}" == @post.user_id
+      %div.inner2
         =button_tag("Edit Title",:class =>"btn btn-primary",:id => "edit_title")
         =button_tag("Update Title",:class =>"btn btn-success",:id => "update_title")
         =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_title")
   %br
+
+
+
   %div.main
-    %div.inner1
-      %strong Description:
-      =text_area_tag 'Description' , "#{@post.description}",readonly: 'readonly',:class=>"form-control",:style=>"width:926px; max-width:926px;height:200px;"
-    %div.inner2
-      -if "#{current_user.id}" == @post.user_id
+    -if "#{current_user.id}" == @post.user_id
+      %div.inner1
+        %strong Description:
+        =text_area_tag 'Description' , "#{@post.description}",readonly: 'readonly',:class=>"form-control",:style=>"height:200px;"
+    -else
+      %div
+        %strong Description:
+        =text_area_tag 'Description' , "#{@post.description}",readonly: 'readonly',:class=>"form-control",:style=>"height:130px;max-width:1221px;max-height:175px;"
+    -if "#{current_user.id}" == @post.user_id
+      %div.inner2
         =button_tag("Edit Description",:class =>"btn btn-primary",:id => "edit_desc")
         =button_tag("Update Description",:class =>"btn btn-success",:id => "update_desc")
         =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_desc")
   %br
-    = image_tag @post.avatar.url(:thumb)
+    -if @post.avatar.present? 
+      = image_tag @post.avatar.url(:thumb)
 %br
 .card
   %div.panel.panel-primary 

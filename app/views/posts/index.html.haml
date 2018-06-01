@@ -1,3 +1,4 @@
+%script{:src => "https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.21.1/sweetalert2.all.js"}
 :css
   .img_size{
     max-width: 300px;
@@ -45,6 +46,9 @@
   .like:hover{
     animation: shake 0.3s;
     animation-iteration-count: 2s;
+  }
+  .post_title:hover{
+  text-decoration:none;
   }
   @keyframes shake {
     0% { transform: translate(1px, 1px) rotate(0deg); }
@@ -108,7 +112,7 @@
           %div.panel.panel-info
             %div.panel-heading
               %b
-                %a.post_title{:href=>"/posts/#{p.id}",:class=>"title"}#{p.title.truncate(30).capitalize}
+                %a.post_title{:href=>"javascript:void(0)",:class=>"post_title_nonuser"}#{p.title.truncate(30).capitalize}
             - if p.avatar.present?
               %div.panel-body.fl
                 %img.img_size{:src=>p.avatar}
@@ -182,5 +186,7 @@
         }, 
         error: function(data){ alert('error'); } 
       })  
-     
     }
+    $(".post_title_nonuser").on("click",function(){
+      swal("Please sign in to view posts!");
+    })

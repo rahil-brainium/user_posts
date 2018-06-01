@@ -10,7 +10,9 @@ class PostsController < ApplicationController
   	@post = Post.create(post_params)
     image = params[:post][:avatar]
     post_id = @post.id
-    @picture_post = Picture.create(:name => image,:imageable_id => post_id,:imageable_type => "Post")
+    params[:post][:avatar].each do |image|
+      @picture_post = Picture.create(:name => image,:imageable_id => post_id,:imageable_type => "Post")
+    end
   	@post.user_id = current_user.id
   	@post.save
   	redirect_to root_url
@@ -18,7 +20,6 @@ class PostsController < ApplicationController
 
   def show 
     @post = Post.find_by_id(params[:id])
-    #@post_comments = Post.includes(:comments).where("comments.commentable_id=?",@post.id)
     @comment = Comment.new
     if @post.present?
       comments = Comment.where("commentable_id =?","#{@post.id}")
