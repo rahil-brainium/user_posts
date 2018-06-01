@@ -12,7 +12,7 @@
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 <body  style="background:#aaaae71a;">
-	<% if user_signed_in? %>
+<% if user_signed_in? %>
   <nav class="navbar navbar-inverse">
     <div class="container-fluid" style="top:5px;">
       <div class="navbar-header active" >     
@@ -40,6 +40,22 @@
               <%= link_to('Logout', destroy_user_session_path, method: :delete) %>
             </li>
           </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+<% else %>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid" style="top:5px;">
+      <div class="navbar-header active" >     
+        <div class="heading_image"><img src="/assets/appicon.png" class="heading_image" style="float:left;height:35px;width:35px;margin-top:11px;cursor:pointer"><a href="/" class="navbar-brand" style="margin-top:10px;margin-left:-24px;cursor:pointer">logs</a></div>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <%= link_to('Sign In',"/users/sign_in",:style=>"top:5px;") %>
+        </li>
+        <li>
+          <%= link_to('Sign Up',"/users/sign_up",:style=>"top:5px;") %>
         </li>
       </ul>
     </div>
