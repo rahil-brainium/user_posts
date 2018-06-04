@@ -74,7 +74,7 @@
               %a.post_title{:href=>"/posts/#{p.id}",:class=>"title"}#{p.title.truncate(30).capitalize}
             -if current_user.id == p.user_id.to_i 
               %a{'data-id'=>"#{p.id}"}
-              %span.glyphicon.glyphicon-trash.delete_post{:style=>"float:right;cursor:pointer"}
+              %span.glyphicon.glyphicon-trash.delete_post{:style=>"float:right;cursor:pointer",'data-id'=>"#{p.id}"}
 
           %div.panel-body
             .row
@@ -149,6 +149,7 @@
 :javascript
   $(".delete_post").click(function() 
     {
+      var id = $(this).data('id');
       swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to revert back!",
@@ -158,7 +159,6 @@
       })
       .then((willDelete) => {
         if (willDelete) {      
-        var id = $(this).data('id');
         $.ajax({
           type: 'DELETE',
           url: "/posts/delete_post/"+id,
