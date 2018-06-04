@@ -4,10 +4,8 @@
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
     background:#aaaae733;
-    width: 40%;
-    height: 360px;
-    margin-left: 400px;
-    margin-top:  100px;
+    margin:10px;
+    max-width: 400px;
   }
   .card:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
@@ -16,35 +14,37 @@
   padding: 2px 16px;
 }
 </style>
-<div class="card" style="overflow-x: hidden;overflow-y: hidden;">
-  <center><h2><strong>Sign In</strong></h2></center>
-  <div class="card-body">
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-      <div class="field">
-        <%= f.email_field :email,:class=>"form-control",:placeholder=>"Email",required: true %>
-        <br>
-      </div>
-      <div class="field">
-        <%= f.password_field :password, autocomplete: "off",:class=>"form-control",:placeholder=>"Password",required: true %>
-      </div>
-      <br>
-      <% if devise_mapping.rememberable? -%>
+<center>
+  <div class="card" style="overflow-x: hidden;overflow-y: hidden;">
+    <center><h2><strong>Sign In</strong></h2></center>
+    <div class="card-body">
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
         <div class="field">
-          <%= f.check_box :remember_me %>
-          <%= f.label :remember_me %>
+          <%= f.email_field :email,:class=>"form-control",:placeholder=>"Email",required: true %>
+          <br>
         </div>
-      <% end -%>
-      <br>
-      <div class="actions">
-        <%= f.submit "Log in",:class=>"btn btn-success" %>
-      </div>
-    <% end %>
-    </br>
-    <%= link_to "Sign up", new_registration_path(resource_name)%><br>
-    <a href="/users/auth/google_oauth2"></span>Sign in with Google</a></span><br>
-    <%= link_to "Forgot your password?", new_password_path(resource_name) %><br>
+        <div class="field">
+          <%= f.password_field :password,:class=>"form-control",:placeholder=>"Password",required: true %>
+        </div>
+        <br>
+        <% if devise_mapping.rememberable? -%>
+          <div class="field">
+            <%= f.check_box :remember_me %>
+            <%= f.label :remember_me %>
+          </div>
+        <% end -%>
+        <br>
+        <div class="actions">
+          <%= f.submit "Log in",:class=>"btn btn-success" %>
+        </div>
+      <% end %>
+      </br>
+      <%= link_to "Sign up", new_registration_path(resource_name)%><br>
+      <a href="/users/auth/google_oauth2"></span>Sign in with Google</a></span><br>
+      <%= link_to "Forgot your password?", new_password_path(resource_name) %><br>
+    </div>
   </div>
-</div>
+</center>
 <style type="text/css">
   .break_line{
     padding: 10px;

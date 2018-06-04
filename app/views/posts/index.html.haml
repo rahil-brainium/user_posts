@@ -1,9 +1,6 @@
 %script{:src => "https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.21.1/sweetalert2.all.js"}
 :css
-  .img_size{
-    max-width: 300px;
-    max-height: 300px;
-  }
+
   .fl {
     float:left;
   }
@@ -78,12 +75,18 @@
             -if current_user.id == p.user_id.to_i 
               %a{'data-id'=>"#{p.id}"}
               %span.glyphicon.glyphicon-trash.delete_post{:style=>"float:right;cursor:pointer"}
-          - if p.pictures.present?
-            %div.panel-body.fl{}
-            - p.pictures.each do |picture|
-              %img.img_size{:src=>picture.image,:style=>"margin-top:13px;"}
+
           %div.panel-body
-            %b=p.description.truncate(1500)
+            .row
+              .col-sm-4.col-sm-4   
+                - if p.pictures.present?
+                  - p.pictures.take(4).each do |picture|
+                    .col-md-6
+                      %img{:src=>picture.image,:style=>"width:100%;height:100%;"}
+                      %span{:style=>"clear:fix;"}
+              .col-sm-8.col-sm-8
+                %b=p.description.truncate(1000)
+
           .row
             .col-md-1
               - if p.likes.where("is_liked =? and user_id =?",true,current_user.id).present?
@@ -114,11 +117,16 @@
             %div.panel-heading
               %b
                 %a.post_title{:href=>"javascript:void(0)",:class=>"post_title_nonuser"}#{p.title.truncate(30).capitalize}
-            / - if p.avatar.present?
-            /   %div.panel-body.fl
-            /     %img.img_size{:src=>p.avatar}
             %div.panel-body
-              %b=p.description.truncate(1500)
+              .row
+                .col-sm-4.col-sm-4   
+                  - if p.pictures.present?
+                    - p.pictures.take(4).each do |picture|
+                      .col-md-6
+                        %img{:src=>picture.image,:style=>"width:100%;height:100%;"}
+                        %span{:style=>"clear:fix;"}
+                .col-sm-8.col-sm-8
+                  %b=p.description.truncate(1000)
             .row
               .col-md-4 
                 %div.panel-body 

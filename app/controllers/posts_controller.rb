@@ -8,12 +8,12 @@ class PostsController < ApplicationController
     @post_pictures = Picture.new
   end
   def create
-    debugger
   	@post = Post.create(post_params)
-    # images = params[:post][:picture][:image]
     post_id = @post.id
-    params[:post][:picture][:image].each do |image|
-      @picture_post = Picture.create(:image => image,:imageable => @post)
+    if params[:post][:picture].present?
+      params[:post][:picture][:image].each do |image|
+        @picture_post = Picture.create(:image => image,:imageable => @post)
+      end
     end
   	@post.user_id = current_user.id
   	@post.save
@@ -22,20 +22,22 @@ class PostsController < ApplicationController
 
   def show 
     @post = Post.find_by_id(params[:id])
+    @comment_pictures = Picture.new
     @comment = Comment.new
     if @post.present?
-      comments = Comment.where("commentable_id =?","#{@post.id}")
-      @comments = comments.where("is_archive =? ",false)
+      @comments = Comment.where("commentable_id =? and is_archive=?","#{@post.id}",false)
     end
   end
 
   def create_comment
-    post_id = params[:post_id]
     post_text = params[:comment][:comment]
-    # image = params[:comment][:avatar]
     @post = Post.find_by_id(params[:post_id])
-    post_comment = @post.comments.create(:comment => post_text,:commentable_id => post_id,:user_id => current_user.id)
-    # @picture_comment = Picture.create(:name => image,:imageable_id => post_comment.id,:imageable_type => "Comment")
+    post_comment = @post.comments.create(:comment => post_text,:commentable => @post,:user_id => current_user.id)
+    if params[:comment][:picture].present?
+      params[:comment][:picture][:image].each do |image|
+        @picture_comment = Picture.create(:image => image,:imageable => post_comment)
+      end
+    end
     redirect_to :back
   end
 
@@ -46,10 +48,9 @@ class PostsController < ApplicationController
         @post.update_attribute(:title,params[:title])
       else
         @post.update_attribute(:description,params[:description])
-        #render text: "sucess"
       end
     end
-    render text: "sucess"
+    render text: "success"
   end
 
   def update_comment
@@ -104,6 +105,6 @@ class PostsController < ApplicationController
 
 	private
 	def post_params
-	  params.require(:post).permit(:title,:description,:avatar)
+	  params.require(:post).permit(:title,:description)
 	end
 end

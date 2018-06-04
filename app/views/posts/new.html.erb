@@ -4,8 +4,7 @@
     background:#aaaae733;
     width: 75%;
     height: auto;
-    left: 172px;
-    top:  100px;
+    top:50px;
     position: relative;
     overflow-x:hidden; 
   }
@@ -18,35 +17,40 @@
 .close:hover{
   text-decoration: none;
 }
+.fl{
+  float: left;
+}
 </style>
-<div class="card">
-  <div  style="float: right;padding-right:10px;padding-top: 10px;cursor: pointer;color: #060000;"><a href="/" class="close">X</a></div>
-  <div style="padding-top:20px;">
-  <div class="card-body">
-    <%= form_for (@post),url: posts_create_path do |f| %>
-      <div class="field">
-        <%= f.label :Title %>
-        <br/>
-        <%= f.text_field :title,:class=>"form-control" %>
-      </div>
-      <div class="field">
-        <%= f.label :Description %>
-        <br/>
-        <%= f.text_area :description,:class=>"form-control",:style=>"height:155px;max-width: 943px;max-height:250px;" %>
-      </div>
-      <br/>
-      <%= f.fields_for @post_pictures do |picture| %>
-        <div>
-          <%= picture.label :'Upload Photo' %>
-          <%= picture.file_field :image ,:multiple=>true %>
+<center>
+  <div class="card">
+    <div  style="float: right;padding-right:10px;padding-top: 10px;cursor: pointer;color: #060000;"><a href="/" class="close">X</a></div>
+    <div style="padding-top:20px;">
+    <div class="card-body">
+      <%= form_for (@post),url: posts_create_path do |f| %>
+        <div class="field">
+          <%= f.label :Title ,:class=>"fl"%>
+          <br/>
+          <%= f.text_field :title,:class=>"form-control",:required=>true %>
         </div>
+        <div class="field">
+          <%= f.label :Description ,:class=>"fl"%>
+          <br/>
+          <%= f.text_area :description,:class=>"form-control",:style=>"height:155px;max-width: 943px;max-height:250px;",:required=>true %>
+        </div>
+        <div class="row">.
+          <div class="col-md-6 col-sm-6">
+            <%= f.fields_for @post_pictures do |picture| %>
+              <%= picture.label :'Upload Images :   ',:class=>"fl",:style=>"margin-top:23px;margin-right:5px;" %>
+              <%= picture.file_field :image ,:multiple=>true,:class=>"fl",:style=>"margin-top:20px;" %>
+            <% end %>
+          </div>
+          <div class="col-md-6 col-sm-6" >   
+            <%= button_tag "Create",:class =>"btn btn-success" ,:style=>"float:right;"%>
+          </div>
+        </div>
+        <br>
       <% end %>
-
-      <br/>
-      <div class="actions">
-        <%= button_tag "Create",:class =>"btn btn-success" %>
-      </div>
-      <br>
-    <% end %>
+    </div>
   </div>
-</div>
+  </div>
+</center>

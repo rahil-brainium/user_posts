@@ -1,6 +1,6 @@
 :css
   .main{
-    position: absolute;
+    position: relative;
   }
   .inner1
   {
@@ -71,14 +71,15 @@
         =button_tag("Update Description",:class =>"btn btn-success",:id => "update_desc")
         =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_desc")
   %br
-    / -if @post.avatar.present? 
-    /   = image_tag @post.avatar.url(:thumb)
+    -if @post.pictures.present? 
+      - @post.pictures.map do |post_picture|
+        %img.img_size{:src=>"#{post_picture.image.url}",:style=>"max-width:250px;max-height:250px; margin-right:20px;margin-bottom:10px;"}
 %br
 .card
   %div.panel.panel-primary 
-    %div.panel-heading 
+    %div.panel-heading{:style=>"box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);"} 
       %b Comments
-  - if @post.present?
+  - if @comments.present?
     - @comments.each do |c|
       %div.panel-body
         %b #{c.user.email} : 
@@ -86,22 +87,19 @@
         -if current_user.id == c.user_id
           - if c.comment.present?
             =text_field_tag 'comment' , "#{c.comment}" ,"data-value" => "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "com_#{c.id}"
-          / -if c.avatar.present?
-          /   %img.img_size{:src=>c.avatar,:style=>"max-width:500px;max-height:500px;"}
-          %br
-          %br
+          - c.pictures.map do |comment_picture|
+            %img.img_size{:src=>"#{comment_picture.image.url}",:style=>"max-width:200px;max-height:200px; margin-right:20px;margin-bottom:10px;"}
           =button_tag("Edit",:class =>"edit_com_#{c.id}",:onclick => "edit_com(#{c.id})")
           =button_tag("Update",:class => "update_com_#{c.id}",:disabled => 'disabled',:onclick => "update_com(#{c.id})")
           =button_tag("Cancel",:class => "cancel_com_#{c.id}",:disabled => 'disabled',:onclick => "cancel_com(#{c.id})")
           =button_tag("Delete",:class => "delete_com_#{c.id}",:id => "#{c.id}",:onclick => "delete_com(#{c.id})")
         -else
-          =text_field_tag 'comment' , "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "#{c.id}"
-
+          - if c.comment.present?
+            =text_field_tag 'comment' , "#{c.comment}" ,"data-value" => "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "com_#{c.id}"
+          - c.pictures.map do |comment_picture|
+            %img.img_size{:src=>"#{comment_picture.image.url}",:style=>"max-width:300px;max-height:300px; margin-right:20px;margin-bottom:10px;"}
           - if current_user.id == @post.user_id.to_i
             =button_tag("Delete",:class => "delete_com_#{c.id}",:id => "#{c.id}",:onclick => "delete_com(#{c.id})")
-          / -if c.avatar.present?
-          /   %img.img_size{:src=>c.avatar}
-          /   %br
   -else
     %div.panel-body No comments till now...
   %br
@@ -110,172 +108,170 @@
     .field{:style=>"margin-left:14px;"}
       = hidden_field_tag :post_id, @post.id
       = f.text_field :comment,:class=>"form-control"
-      / = f.file_field :avatar, :id => "display_upload",:class => "uploadfile"
-      &nbsp; 
-      %a.glyphicon.glyphicon-paperclip#upload{:style=>"cursor:pointer;"}
-      &nbsp; 
-
-      = f.submit 'Comment',:class =>"btn btn-success"
+      = f.fields_for @comment_pictures do |picture|
+        = picture.file_field :image ,:multiple=>true,:class => "uploadfile",:id => "display_upload"
+        %a.glyphicon.glyphicon-paperclip#upload{:style=>"cursor:pointer;margin-left:5px;margin-right:5px;"}
+        = f.submit 'Comment',:class =>"btn btn-success"
   %br
 
 :javascript
-    $("#update_title").hide();
-    $("#cancel_title").hide();
+  $("#update_title").hide();
+  $("#cancel_title").hide();
+  $("#update_desc").hide();
+  $("#cancel_desc").hide();
+  var description = $('#Description').val();
+  var title = $('#Title').val();
+  $("#upload").click(function(){
+    var x = $(".uploadfile").trigger("click");
+    var image = $(".uploadfile").val();
+    $(".img").hide();
+    $(".uploadfile").show();     
+  });
+  $("#edit_title").click(function() 
+  {
+    $("#Title").attr("readonly", false);
+    var SearchInput =$("#Title");
+    var strLength = SearchInput.val().length * 2;
+    SearchInput.focus();
+    SearchInput[0].setSelectionRange(strLength, strLength);
+    $("#update_title").show();
+    $("#cancel_title").show();
+    $(this).hide();
+  });
+
+  $("#edit_desc").click(function() 
+  {
+    var SearchInput =$("#Description");
+    var strLength = SearchInput.val().length * 2;
+    SearchInput.focus();
+    SearchInput[0].setSelectionRange(strLength, strLength);
+    $("#Description").attr("readonly", false);
+    $("#Description").focus();
+    $("#update_desc").show();
+    $("#cancel_desc").show();
+    $(this).hide();
+  });
+
+  $("#cancel_desc").click(function()
+  {
     $("#update_desc").hide();
     $("#cancel_desc").hide();
-    var description = $('#Description').val();
-    var title = $('#Title').val();
-    $("#upload").click(function(){
-      var x = $(".uploadfile").trigger("click");
-      var image = $(".uploadfile").val();
-      $(".img").hide();
-      $(".uploadfile").show();     
-    });
-    $("#edit_title").click(function() 
-    {
-      $("#Title").attr("readonly", false);
-      var SearchInput =$("#Title");
-      var strLength = SearchInput.val().length * 2;
-      SearchInput.focus();
-      SearchInput[0].setSelectionRange(strLength, strLength);
-      $("#update_title").show();
-      $("#cancel_title").show();
-      $(this).hide();
-    });
+    $('#Description').attr('readonly', true);
+    $('#Description').val(description);
+    $("#edit_desc").show();
+  });
 
-    $("#edit_desc").click(function() 
-    {
-      var SearchInput =$("#Description");
-      var strLength = SearchInput.val().length * 2;
-      SearchInput.focus();
-      SearchInput[0].setSelectionRange(strLength, strLength);
-      $("#Description").attr("readonly", false);
-      $("#Description").focus();
-      $("#update_desc").show();
-      $("#cancel_desc").show();
-      $(this).hide();
-    });
+  $("#cancel_title").click(function()
+  {
+    $("#update_title").hide();
+    $("#cancel_title").hide();
+    $('#Title').attr('readonly', true);
+    $('#Title').val(title);
+    $("#edit_title").show();
+  });
 
-    $("#cancel_desc").click(function()
+  $("#update_title").click(function(){ 
+    var title_update = $('#Title').val();
+    data = title_update
+    if(title_update != title)
     {
-      $("#update_desc").hide();
-      $("#cancel_desc").hide();
-      $('#Description').attr('readonly', true);
-      $('#Description').val(description);
-      $("#edit_desc").show();
-    });
-
-    $("#cancel_title").click(function()
-    {
-      $("#update_title").hide();
-      $("#cancel_title").hide();
-      $('#Title').attr('readonly', true);
-      $('#Title').val(title);
-      $("#edit_title").show();
-    });
-
-    $("#update_title").click(function(){ 
-      var title_update = $('#Title').val();
-      data = title_update
-      if(title_update != title)
-      {
-        post_id = #{@post.id}
-        $.ajax({
-          type: 'PATCH',
-          url: "/posts/"+#{@post.id},
-          data:{'title': title_update},
-          success: function(data)
-          { 
-            $('#Title').attr('readonly', true);
-            $("#edit_title").show();
-            $("#update_title").hide();
-            $("#cancel_title").hide();
-            title = title_update;
-          }, 
-          error: function(data){ alert('error'); } 
-        })
-      }
-    });
-    $("#update_desc").click(function(){ 
-      var desc_update = $('#Description').val();
-      if(desc_update != description)
-      {
-        post_id = #{@post.id}
-        $.ajax({
-          type: 'PATCH',
-          url: "/posts/"+#{@post.id},
-          data:{'description': desc_update},
-          success: function(data)
-          { 
-            $('#Description').attr('readonly', true);
-            $("#edit_desc").show();
-            $("#update_desc").hide();
-            $("#cancel_desc").hide();
-            description = desc_update;
-          }, 
-          error: function(data){ alert('error'); } 
-        })
-      }
-    });
-
-    function edit_com(id)
-    {
-      var comment_id = id;
-      $(".edit_com_"+id).hide();
-      $(".update_com_"+id).removeAttr('disabled');
-      $(".cancel_com_"+id).removeAttr('disabled');
-      $("#com_"+id).removeAttr('readonly');
-      var SearchInput = $("#com_"+id);
-      var strLength = SearchInput.val().length * 2;
-      SearchInput.focus();
-      SearchInput[0].setSelectionRange(strLength, strLength);
-    }
-    function update_com(id)
-    {
-      var val = $("#com_"+id).val();
-      console.log(val);
+      post_id = #{@post.id}
       $.ajax({
         type: 'PATCH',
-        url: "/posts/"+#{@post.id}+"/comment_update",
-        data:{'comment_val': val,'comment_id':id},
+        url: "/posts/"+#{@post.id},
+        data:{'title': title_update},
         success: function(data)
         { 
-          $("#com_"+id).attr('readonly', true);
-          $(".update_com_"+id).attr('disabled',true);
-          $(".cancel_com_"+id).attr('disabled',true);
-          $(".edit_com_"+id).show();
-          $("#com_"+id).data("value", val)
-
+          $('#Title').attr('readonly', true);
+          $("#edit_title").show();
+          $("#update_title").hide();
+          $("#cancel_title").hide();
+          title = title_update;
         }, 
         error: function(data){ alert('error'); } 
       })
     }
-    function cancel_com(id)
+  });
+  $("#update_desc").click(function(){ 
+    var desc_update = $('#Description').val();
+    if(desc_update != description)
     {
-      var comment_id = id;
-      $(".edit_com_"+id).show();
-      $(".update_com_"+id).attr('disabled',true);
-      $(".cancel_com_"+id).attr('disabled',true);
-      $("#com_"+id).attr('readonly',true);
-      var value = $("#com_"+id).data('value');
-      $("#com_"+id).val(value);
-    }
-
-    function delete_com(id)
-    {
-      var comment_id = id;
-      //alert(id);
+      post_id = #{@post.id}
       $.ajax({
-        type: 'DELETE',
-        url: "/posts/"+#{@post.id}+"/delete_comment/"+id,
-        data:{'post_id': #{@post.id}},
+        type: 'PATCH',
+        url: "/posts/"+#{@post.id},
+        data:{'description': desc_update},
         success: function(data)
         { 
-          
+          $('#Description').attr('readonly', true);
+          $("#edit_desc").show();
+          $("#update_desc").hide();
+          $("#cancel_desc").hide();
+          description = desc_update;
         }, 
         error: function(data){ alert('error'); } 
       })
     }
+  });
+
+  function edit_com(id)
+  {
+    var comment_id = id;
+    $(".edit_com_"+id).hide();
+    $(".update_com_"+id).removeAttr('disabled');
+    $(".cancel_com_"+id).removeAttr('disabled');
+    $("#com_"+id).removeAttr('readonly');
+    var SearchInput = $("#com_"+id);
+    var strLength = SearchInput.val().length * 2;
+    SearchInput.focus();
+    SearchInput[0].setSelectionRange(strLength, strLength);
+  }
+  function update_com(id)
+  {
+    var val = $("#com_"+id).val();
+    console.log(val);
+    $.ajax({
+      type: 'PATCH',
+      url: "/posts/"+#{@post.id}+"/comment_update",
+      data:{'comment_val': val,'comment_id':id},
+      success: function(data)
+      { 
+        $("#com_"+id).attr('readonly', true);
+        $(".update_com_"+id).attr('disabled',true);
+        $(".cancel_com_"+id).attr('disabled',true);
+        $(".edit_com_"+id).show();
+        $("#com_"+id).data("value", val)
+
+      }, 
+      error: function(data){ alert('error'); } 
+    })
+  }
+  function cancel_com(id)
+  {
+    var comment_id = id;
+    $(".edit_com_"+id).show();
+    $(".update_com_"+id).attr('disabled',true);
+    $(".cancel_com_"+id).attr('disabled',true);
+    $("#com_"+id).attr('readonly',true);
+    var value = $("#com_"+id).data('value');
+    $("#com_"+id).val(value);
+  }
+
+  function delete_com(id)
+  {
+    var comment_id = id;
+    //alert(id);
+    $.ajax({
+      type: 'DELETE',
+      url: "/posts/"+#{@post.id}+"/delete_comment/"+id,
+      data:{'post_id': #{@post.id}},
+      success: function(data)
+      { 
+        
+      }, 
+      error: function(data){ alert('error'); } 
+    })
+  }
 
 
 
