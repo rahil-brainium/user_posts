@@ -75,7 +75,6 @@
             -if current_user.id == p.user_id.to_i 
               %a{'data-id'=>"#{p.id}"}
               %span.glyphicon.glyphicon-trash.delete_post{:style=>"float:right;cursor:pointer",'data-id'=>"#{p.id}"}
-
           %div.panel-body
             .row
               .col-sm-4.col-sm-4   
@@ -86,7 +85,6 @@
                       %span{:style=>"clear:fix;"}
               .col-sm-8.col-sm-8
                 %b=p.description.truncate(1000)
-
           .row
             .col-md-1
               - if p.likes.where("is_liked =? and user_id =?",true,current_user.id).present?

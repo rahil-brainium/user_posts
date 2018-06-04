@@ -7,16 +7,14 @@ class PostsController < ApplicationController
   	@post = Post.new
     @post_pictures = Picture.new
   end
+
   def create
-  	@post = Post.create(post_params)
-    post_id = @post.id
+  	@post = Post.create(:title=>params[:post][:title],:description=>params[:post][:description],:user_id=>current_user.id)
     if params[:post][:picture].present?
       params[:post][:picture][:image].each do |image|
         @picture_post = Picture.create(:image => image,:imageable => @post)
       end
     end
-  	@post.user_id = current_user.id
-  	@post.save
   	redirect_to root_url
   end
 
