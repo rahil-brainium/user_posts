@@ -78,9 +78,10 @@
             -if current_user.id == p.user_id.to_i 
               %a{'data-id'=>"#{p.id}"}
               %span.glyphicon.glyphicon-trash.delete_post{:style=>"float:right;cursor:pointer"}
-          / - if p.avatar.present?
-          /   %div.panel-body.fl
-          /     %img.img_size{:src=>p.avatar}
+          - if p.pictures.present?
+            %div.panel-body.fl{}
+            - p.pictures.each do |picture|
+              %img.img_size{:src=>picture.image,:style=>"margin-top:13px;"}
           %div.panel-body
             %b=p.description.truncate(1500)
           .row

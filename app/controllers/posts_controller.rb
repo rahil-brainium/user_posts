@@ -10,11 +10,11 @@ class PostsController < ApplicationController
   def create
     debugger
   	@post = Post.create(post_params)
-    images = params[:post][:picture][:image]
+    # images = params[:post][:picture][:image]
     post_id = @post.id
-    # params[:post][:avatar].each do |image|
-    #   @picture_post = Picture.create(:name => image,:imageable_id => post_id,:imageable_type => "Post")
-    # end
+    params[:post][:picture][:image].each do |image|
+      @picture_post = Picture.create(:image => image,:imageable => @post)
+    end
   	@post.user_id = current_user.id
   	@post.save
   	redirect_to root_url
