@@ -45,8 +45,8 @@
           =text_field_tag 'Title' , "#{@post.title}" ,readonly: 'readonly',:class=>"form-control",:style=>"margin-bottom:10px;"
         .col-md-6.col-sm-6
           =button_tag("Edit Title",:class =>"btn btn-primary",:id => "edit_title",:style=>"margin-bottom:10px;")
-          =button_tag("Update Title",:class =>"btn btn-success",:id => "update_title")
-          =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_title")
+          =button_tag("Update Title",:class =>"btn btn-success",:id => "update_title",:style=>"margin-bottom:10px;")
+          =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_title",:style=>"margin-bottom:10px;")
     -else
       %strong Title:
       =text_field_tag 'Title' , "#{@post.title}" ,readonly: 'readonly',:class=>"form-control"
@@ -60,8 +60,8 @@
           =text_area_tag 'Description' , "#{@post.description}",readonly: 'readonly',:class=>"form-control",:style=>"height:200px;margin-bottom:10px;"
         .col-md-6.col-sm-6
           =button_tag("Edit Description",:class =>"btn btn-primary",:id => "edit_desc",:style=>"margin-bottom:10px;")
-          =button_tag("Update Description",:class =>"btn btn-success",:id => "update_desc")
-          =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_desc")
+          =button_tag("Update Description",:class =>"btn btn-success",:id => "update_desc",:style=>"margin-bottom:10px;")
+          =button_tag("Cancel",:class =>"btn btn-danger",:id => "cancel_desc",:style=>"margin-bottom:10px;")
     -else
       %div
         =text_area_tag 'Description' , "#{@post.description}",readonly: 'readonly',:class=>"form-control",:style=>"height:130px;max-width:1221px;max-height:175px;"
