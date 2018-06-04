@@ -9,7 +9,8 @@ class PostsController < ApplicationController
   end
 
   def create
-  	@post = Post.create(:title=>params[:post][:title],:description=>params[:post][:description],:user_id=>current_user.id)
+    params[:post][:user_id] = current_user.id
+    @post = Post.create(post_params)
     if params[:post][:picture].present?
       params[:post][:picture][:image].each do |image|
         @picture_post = Picture.create(:image => image,:imageable => @post)
@@ -103,6 +104,6 @@ class PostsController < ApplicationController
 
 	private
 	def post_params
-	  params.require(:post).permit(:title,:description)
+	  params.require(:post).permit(:title,:description,:user_id)
 	end
 end

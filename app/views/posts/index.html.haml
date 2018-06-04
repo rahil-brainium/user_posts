@@ -29,7 +29,6 @@
     color:#689b58;
   }
   .delete_post:hover{
-    
     color:#000;
   }
   .title
@@ -75,16 +74,25 @@
             -if current_user.id == p.user_id.to_i 
               %a{'data-id'=>"#{p.id}"}
               %span.glyphicon.glyphicon-trash.delete_post{:style=>"float:right;cursor:pointer",'data-id'=>"#{p.id}"}
-          %div.panel-body
-            .row
-              .col-sm-4.col-sm-4   
-                - if p.pictures.present?
+
+          -if p.pictures.present?    
+            %div.panel-body
+              .row
+                .col-sm-4.col-sm-4   
                   - p.pictures.take(4).each do |picture|
                     .col-md-6
                       %img{:src=>picture.image,:style=>"width:100%;height:100%;"}
                       %span{:style=>"clear:fix;"}
-              .col-sm-8.col-sm-8
-                %b=p.description.truncate(1000)
+                .col-sm-8.col-sm-8
+                  %b=p.description.truncate(1000)
+          -else 
+            %div.panel-body
+              .row
+                .col-md-12.col-sm-12
+                  %b=p.description.truncate(1000)
+
+
+
           .row
             .col-md-1
               - if p.likes.where("is_liked =? and user_id =?",true,current_user.id).present?

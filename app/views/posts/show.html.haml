@@ -93,6 +93,7 @@
           =button_tag("Update",:class => "update_com_#{c.id}",:disabled => 'disabled',:onclick => "update_com(#{c.id})")
           =button_tag("Cancel",:class => "cancel_com_#{c.id}",:disabled => 'disabled',:onclick => "cancel_com(#{c.id})")
           =button_tag("Delete",:class => "delete_com_#{c.id}",:id => "#{c.id}",:onclick => "delete_com(#{c.id})")
+          %br
         -else
           - if c.comment.present?
             =text_field_tag 'comment' , "#{c.comment}" ,"data-value" => "#{c.comment}" ,readonly: 'readonly',:class=>"form-control", :id => "com_#{c.id}"
