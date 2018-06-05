@@ -87,16 +87,32 @@ class PostsController < ApplicationController
   def like_post
     @post = Post.find_by_id(params[:id])
     if_like = params[:like_boolean].to_s
-    if if_like.eql? "false"
-      po = @post.likes.where("user_id =?", current_user.id)
-      if po.empty?
-        @like = Like.create(:is_liked => true,:user_id => current_user.id,:post_id => @post.id)
+    @like = @post.likes.where("user_id=?",current_user.id).first
+    if @like.present?
+      if if_like.eql? "true"
+        @like.update_attribute(:is_liked,false)
+      else
+        @like.update_attribute(:is_liked,true)
       end
     else
-      po = @post.likes.where("user_id =?", current_user.id)
-      po.first.destroy
+      @like = Like.create(:is_liked => true,:user_id => current_user.id,:post_id => @post.id)
     end
-    redirect_to :back
+
+
+    render json: {post_id: @post.id,is_like: @like.is_liked}
+    # if if_like.eql? "false"
+    #   po = @post.likes.where("user_id =?", current_user.id)
+    #   if po.empty?
+    #     @like = Like.create(:is_liked => true,:user_id => current_user.id,:post_id => @post.id)
+    #     render json: @like
+    #   else
+    #     @like = Like.where()
+    # else
+    #   po = @post.likes.where("user_id =?", current_user.id)
+    #   po.first.update_attribute(:is_liked=>true)
+    #   render json: @like
+    #   # render text: "false"
+    # end
   end
 
 

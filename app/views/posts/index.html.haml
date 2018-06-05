@@ -97,10 +97,10 @@
             .col-md-1
               - if p.likes.where("is_liked =? and user_id =?",true,current_user.id).present?
                 %div.panel-body
-                  %img{:src => "/assets/unlike",:height =>"30px",:width => "30px",:id => "like_post",:class => "like_post_icon"+"#{p.id} like",:onclick => "like_post(#{p.id})" ,:style=>"cursor:pointer;"}
+                  %img{:src => "/assets/unlike",:height =>"30px",:width => "30px",:id => "like_post",:class => "liked_#{p.id} like",:style=>"cursor:pointer;",'data-id'=>"#{p.id}"}
               -else
                 %div.panel-body
-                  %img{:src => "/assets/like",:height =>"30px",:width => "30px",:id => "like_post",:class => "unlike_post_icon"+"#{p.id} like",:onclick => "like_post(#{p.id})",:style=>"cursor:pointer;"}
+                  %img{:src => "/assets/like",:height =>"30px",:width => "30px",:id => "like_post",:class => "not_liked_#{p.id} like",:style=>"cursor:pointer;",'data-id'=>"#{p.id}"}
             .col-md-3 
               %div.panel-body 
                 %b Comments: 
@@ -190,25 +190,43 @@
           swal("We did not delete your post");
         }
       });
-      
     });
 
 
-    function like_post(id) 
-    {
-      var post_id = id;
-      var x = $( "img" ).hasClass( "like_post_icon"+id );
-      $.ajax({
-        type: 'PATCH',
-        url: "/posts/like_post/"+id,
-        data:{'like_boolean': x},
-        success: function(data)
-        { 
-          
-        }, 
-        error: function(data){ alert('error'); } 
-      })  
-    }
-    $(".post_title_nonuser").on("click",function(){
-      swal("Please sign in to view posts!");
+
+
+  $(".like").on("click",function(){
+    var post_id = $(this).data('id');
+    var has_class_liked = $(this).hasClass("liked_"+post_id);
+
+    console.log(has_class_liked);
+
+    $.ajax({
+      type: 'PATCH',
+      url: "/posts/like_post/"+post_id,
+      data:{'like_boolean': has_class_liked},
+      success: function(data)
+      { 
+        if(data.is_like==true)
+        {
+          $(".not_liked_"+data.post_id).attr("src","/assets/unlike");
+          $(".not_liked_"+data.post_id).addClass("liked_"+data.post_id).removeClass("not_liked_"+data.post_id);
+        }
+        if(data.is_like==false)
+        {
+          $(".liked_"+post_id).attr("src","/assets/like");
+          $(".liked_"+data.post_id).addClass("not_liked_"+data.post_id).removeClass("liked_"+data.post_id);
+        }
+      }, 
+      error: function(data){ alert('error'); } 
     })
+
+  });
+
+
+
+
+  
+  $(".post_title_nonuser").on("click",function(){
+    swal("Please sign in to view posts!");
+  })
