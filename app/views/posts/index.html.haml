@@ -1,4 +1,4 @@
-%script{:src => "https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.21.1/sweetalert2.all.js"}
+%script{:src => "https://unpkg.com/sweetalert/dist/sweetalert.min.js"}
 :css
 
   .fl {
@@ -165,29 +165,29 @@
       var id = $(this).data('id');
       swal({
       title: "Are you sure?",
-      text: "Once deleted, you will not be able to revert back!",
+      text: "Once deleted, you will not be able to revert!",
       icon: "warning",
       buttons: true,
       dangerMode: true,
-      })
-      .then((willDelete) => {
-        if (willDelete) {      
-        $.ajax({
-          type: 'DELETE',
-          url: "/posts/delete_post/"+id,
-          data:{'post_id': id},
-          success: function(data)
-          { 
-            $("#"+data).remove();
-            swal("Poof! Your post has been deleted!", {
-              icon: "success",
-            });
-          }, 
-          error: function(data){ alert('error'); } 
-        })
-        } else 
+      }).then((willDelete) => {
+        if (willDelete) 
         {
-          swal("We did not delete your post");
+          $.ajax({
+            type: 'DELETE',
+            url: "/posts/delete_post/"+id,
+            data:{'post_id': id},
+            success: function(data)
+            { 
+              $("#"+data).remove();
+              swal("Poof! Your post has been deleted!", {
+                icon: "success",
+              });
+            }, 
+            error: function(data){ alert('error'); } 
+          })
+        } 
+        else {
+          swal("Post not deleted!!!");
         }
       });
     });
